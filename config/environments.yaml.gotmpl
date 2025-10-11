@@ -14,10 +14,3 @@ environments:
     - "../../config/live/values.yaml"
     secrets:
     - "../../config/live/secrets.sops.yaml"
-  pc:
-    kubeContext: pc-control-plane
-    values:
-    - namespace: {{ exec "pwd" (list) | trim | base }}
-    - "../../config/pc/values.yaml"
-    secrets:
-    - "../../config/pc/secrets.sops.yaml"

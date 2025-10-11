@@ -91,7 +91,3 @@ releases:
         persistence:
           subPath: loki/data
           existingClaim: persistence-{{ .Values.namespace }}
-
-# - name: mariadb
-#   inherit:
-#   - template: requiresPersistence

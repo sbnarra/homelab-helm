@@ -24,14 +24,6 @@ templates:
     needs:
     - media
 
-  requiresTestMedia:
-    inherit:
-    - template: requiresPersistence
-    values:
-    - mediaStorageClaim: test-media-{{ exec "pwd" (list) | trim | base }}
-    needs:
-    - test-media
-
 ########################################################
 
   storage:
@@ -51,11 +43,3 @@ templates:
     values:
     - nfs:
         path: /lab/media
-
-  testMediaStorage:
-    inherit:
-    - template: storage
-    name: test-media
-    values:
-    - nfs:
-        path: /lab/test-media
