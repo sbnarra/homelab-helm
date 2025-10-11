@@ -1,0 +1,22 @@
+bases:
+- ../../config/environments.yaml.gotmpl
+- ../../modules/templates.yaml.gotmpl
+---
+releases:
+- inherit:
+  - template: persistenceStorage
+
+- name: freecad
+  inherit:
+  - template: requiresNothing
+
+- name: freecad-exports
+  inherit:
+  - template: storage
+  values:
+  - nfs:
+      path: /lab/persistence/printer/freecad
+
+- name: orcaslicer
+  inherit:
+  - template: requiresPersistence

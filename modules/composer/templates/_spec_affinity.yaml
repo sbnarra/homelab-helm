@@ -1,0 +1,42 @@
+{{- define "spec.affinity" }}
+affinity:
+  nodeAffinity:
+    {{- if and .Values.affinity .Values.affinity.required }}
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        {{- range $key, $values := .Values.affinity.labels }}
+        - key: {{ $key }}
+          operator: In
+          values: 
+          {{- range $values }}
+          - {{ . }}
+          {{- end }}
+        {{- end }}
+    {{- else }}
+    preferredDuringSchedulingIgnoredDuringExecution:
+    {{- if and .Values.affinity .Values.affinity.labels }}
+    - weight: 60
+      preference:
+        matchExpressions:
+        {{- range $key, $values := .Values.affinity.labels }}
+        - key: {{ $key }}
+          operator: In
+          values: 
+          {{- range $values }}
+          - {{ . }}
+          {{- end }}
+        {{- end }}
+    {{- end }}
+    - weight: 40
+      preference:
+        matchExpressions:
+        - key: affinity/{{ .Release.Namespace }}.{{ .Release.Name }}
+          operator: Exists
+    - weight: 20
+      preference:
+        matchExpressions:
+        - key: affinity/{{ .Release.Namespace }}
+          operator: Exists
+    {{- end }}
+{{- end }}

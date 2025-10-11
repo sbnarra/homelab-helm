@@ -1,0 +1,50 @@
+traefik:
+  env:
+  - name: CLOUDFLARE_DNS_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare
+        key: token
+  certResolvers:
+    letsencrypt:
+      email: arranstobbs@gmail.com
+      storage: /data/acme.json
+      dnsChallenge:
+        resolvers: 1.1.1.1
+        provider: cloudflare
+  ports:
+    websecure:
+      tls:
+        certResolver: "letsencrypt"
+  podSecurityContext:
+    fsGroup: 65532
+    fsGroupChangePolicy: "OnRootMismatch"
+  logs:
+    general:
+      level: INFO
+  additionalArguments:
+  - --api
+  - --api.insecure=true
+  - "--providers.kubernetescrd.allowCrossNamespace=true"
+  metrics:
+    prometheus:
+      service:
+        enabled: true
+  persistence:
+    enabled: true
+    path: /data
+    accessMode: ReadWriteMany
+  ingressRoute:
+    dashboard:
+      enabled: true
+
+ # deployment:
+ #   initContainers:
+ #   - name: volume-permissions
+ #     image: busybox:latest
+ #     # TODO: set this volume up in ansible with 65532:65532 to avoid manually setting
+ #     command: ["sh", "-c", "[ ! -e /data/acme.json ] && touch /data/acme.json && chmod -v 600 /data/acme.json"]
+ #     volumeMounts:
+ #     - mountPath: /data
+ #       name: data
+ #       subPath: "traefik/data"

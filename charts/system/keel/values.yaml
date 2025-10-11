@@ -1,0 +1,23 @@
+# TODO: upgrade to "latest" once issue is resolved
+# https://github.com/keel-hq/keel/issues/780
+keel:
+  image:
+    tag: "0.19"
+  insecureRegistry: false
+  polling:
+    enabled: true
+    defaultSchedule: "@weekly" # https://keel.sh/docs/#cron-expression-format
+  slack:
+    enabled: true
+    botName: keel
+    channel: keel-updates
+    approvalsChannel: keel-updates
+
+# composer
+selectorKey: app
+selectorValue: keel
+ports:
+  ClusterIP:
+  - port: 9300
+    targetPort: 9300
+    subdomain: updates

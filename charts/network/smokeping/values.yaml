@@ -1,0 +1,11 @@
+image:
+  name: linuxserver/smokeping
+  tag: latest
+ports:
+  ClusterIP:
+  - port: 80
+    subdomain: smokeping
+volumes:
+  persisted:
+  - /config
+  - /data

@@ -1,0 +1,6 @@
+dependencies:
+- name: proxy
+  repository: file://../../../modules/proxy
+  version: 0.0.1
+digest: sha256:a99b0fc2852eb09b8b7cf5b5f5363542a2808082f85c01a5d36559c60c25002b
+generated: "2025-05-05T21:45:59.5066693+01:00"

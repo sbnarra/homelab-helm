@@ -1,0 +1,79 @@
+bases:
+- ../../config/environments.yaml.gotmpl
+- ../../modules/templates.yaml.gotmpl
+---
+environments:
+  test:
+  nas:
+---
+releases:
+- inherit:
+  - template: persistenceStorage
+
+- name: openthread-border-router
+  inherit:
+  - template: requiresNothing
+  labels:
+    dependsOn: usbs
+  values:
+  - replicas: 0
+
+- name: homebridge
+  inherit:
+  - template: requiresPersistence
+  values:
+  - replicas: 0
+
+# - name: scrypted
+#   inherit:
+#   - template: requiresPersistence
+
+- name: matter
+  inherit:
+  - template: requiresPersistence
+  values:
+  - replicas: 0
+
+- name: piper
+  inherit:
+  - template: requiresPersistence
+  values:
+  - replicas: 0
+
+- name: whisper
+  inherit:
+  - template: requiresPersistence
+  values:
+  - replicas: 0
+
+- name: mosquitto
+  inherit:
+  - template: requiresPersistence
+
+- name: zigbee
+  inherit:
+  - template: requiresPersistence
+  needs:
+  - mosquitto
+  labels:
+    dependsOn: usbs
+
+- name: home-assistant
+  inherit:
+  - template: requiresPersistence
+  needs:
+  - mosquitto
+  - whisper
+  - piper
+  - matter
+  - openthread-border-router
+
+- name: nodered
+  inherit:
+  - template: requiresPersistence
+  needs:
+  - home-assistant
+
+# - name: open-wake-word
+#   inherit:
+#   - template: requiresNothing

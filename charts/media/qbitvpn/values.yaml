@@ -1,0 +1,62 @@
+image:
+  name: binhex/arch-qbittorrentvpn
+  tag: latest
+  # tag: 5.0.4-3-01
+env:
+  ENABLE_PRIVOXY: "yes"
+  VPN_ENABLED: "yes"
+  VPN_CLIENT: wireguard
+  VPN_PROV: torguard
+  VPN_USER: arranstobbs@gmail.com
+  LAN_NETWORK: 0.0.0.0/0
+  ENABLE_STARTUP_SCRIPTS: "yes"
+  WEBUI_PORT: 8080
+  DEBUG: "true"
+ports:
+  ClusterIP:
+  - port: 8080
+    subdomain: torrents
+    name: ui
+  - port: 8118
+    name: privoxy
+volumes:
+  persisted:
+  - /config
+  claims:
+  - claim: "{{ .Values.mediaStorageClaim }}"
+    mounts:
+      torrents: /storage/torrents
+  host:
+  - hostPath: /etc/localtime
+    containerPath: /etc/localtime
+  config:
+  # qBittorrent Config
+  - path: /static/qBittorrent.conf
+    content: |
+      {{ tpl (.Files.Get "configmap/qBittorrent.conf") . }}
+  - path: /static/categories.json
+    content: |
+      {{ tpl (.Files.Get "configmap/categories.json") . }}
+  # WireGuard Config
+  - path: /static/wg0.conf
+    content: |
+      {{ tpl (.Files.Get "configmap/wg0.conf") . }}
+initContainers:
+- name: config
+  image: busybox
+  command:
+  - sh
+  - -c
+  - mkdir /config/wireguard;
+    cp /static/wg0.conf /config/wireguard/wg0.conf;
+    mkdir -p /config/qBittorrent/config/;
+    cp /static/categories.json /config/qBittorrent/config/categories.json;
+    cp /static/qBittorrent.conf /config/qBittorrent/config/qBittorrent.conf;
+
+# ndots: 2
+security:
+  privileged: true
+  capabilities:
+  - "NET_ADMIN"
+  sysctls:
+    net.ipv4.conf.all.src_valid_mark: "1"

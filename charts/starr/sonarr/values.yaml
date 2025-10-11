@@ -1,0 +1,19 @@
+image:
+  registry: lscr.io
+  name: linuxserver/sonarr
+  tag: latest
+# liveness:
+#   port: 8989
+#   path: /ping
+ndots: 2
+ports:
+  ClusterIP:
+    - port: 8989
+      subdomain: shows
+volumes:
+  persisted:
+    - /config
+  claims:
+    - claim: "{{ .Values.mediaStorageClaim }}"
+      mounts:
+        /: /storage

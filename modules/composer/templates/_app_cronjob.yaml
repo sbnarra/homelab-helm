@@ -1,0 +1,30 @@
+{{- define "components.cronjob" }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  {{- if .Values.scheduleDisabled }}
+  schedule: "* * 31 2 *"
+  {{ else }}
+  schedule: {{ .Values.schedule | quote }}
+  {{- end }}
+  concurrencyPolicy: {{ .Values.concurrencyPolicy | default "Forbid" }}
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit | default 1 }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit | default 5 }}
+  jobTemplate:
+    metadata: {}
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.ttlSecondsAfterFinished | default 60 }}
+      template:
+        metadata:
+          labels:
+            app: {{ .Release.Name }}
+        spec:
+          restartPolicy: {{ .Values.restartPolicy | default "Never" }}
+          {{- include "spec.affinity" . | indent 10 }}
+          {{- include "spec.containers" . | indent 10 }}
+{{- end }}

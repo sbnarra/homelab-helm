@@ -1,0 +1,25 @@
+type: daemonset
+image:
+  registry: ghcr.io
+  name: haveagitgat/tdarr_node
+  tag: 2.32.01
+keelPollSchedule: "@every 1m"
+security:
+  privileged: true
+env:
+  serverIP: "{{ .Values.loadBalancerIP }}"
+  serverPort: 8266
+  inContainer: true
+  ffmpegVersion: 6
+fieldEnv:
+  nodeName: spec.nodeName
+volumes:
+  persisted:
+  - /app/logs
+  - /app/configs
+  claims:
+  - claim: "{{ .Values.mediaStorageClaim }}"
+    mounts:
+      /: /storage
+gpu:
+  enabled: true

@@ -1,0 +1,5 @@
+{{- define "components.proxy" -}}
+{{ include "components.service" . }}
+{{ include "components.ingress" . }}
+{{ include "components.endpoint" . }}
+{{- end -}}

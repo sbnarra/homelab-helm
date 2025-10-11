@@ -1,0 +1,15 @@
+image:
+  name: library/nginx
+  tag: latest
+ports:
+  ClusterIP:
+  - port: 80
+    subdomain: www
+volumes:
+  config:
+  - path: /usr/share/nginx/html/index.html
+    content: |
+      {{ tpl (.Files.Get "configmap/index.html") . }}
+  - path: /usr/share/nginx/html/services.json
+    content: |
+      {{ tpl (.Files.Get "configmap/services.json") . }}

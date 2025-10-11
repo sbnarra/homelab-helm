@@ -1,0 +1,9 @@
+
+alias code="code-server"
+. /workspace/home-lab/bin/.labrc
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+export PS1="$(hostname) $PS1"
+
+export PATH=/usr/local/go/bin:$PATH
+
+export GPG_TTY=$(tty)

@@ -1,0 +1,28 @@
+{{- define "components.configmap" -}}
+{{- range .Values.volumes.config }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}
+type: Opaque
+immutable: true
+data:
+  {{ base .path }}: |{{ tpl .content $ | nindent 4 }}
+{{- end }}
+{{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Release.Name }}-linuxserver-gpu
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}
+type: Opaque
+immutable: true
+data:
+  00_gpu-render-group: |{{ include "linuxserver.gpu-render-group" . | nindent 4 }}
+{{- end }}
+{{- end }}

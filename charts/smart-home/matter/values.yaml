@@ -1,0 +1,17 @@
+image:
+  registry: ghcr.io
+  name: home-assistant-libs/python-matter-server
+  tag: stable
+hostNetwork: true
+ports:
+  ClusterIP:
+  - port: 5580
+volumes:
+  persisted:
+  - /data
+  host:
+  - hostPath: /run/dbus
+    containerPath: /run/dbus
+    type: Directory
+security:
+  seccomp: Unconfined

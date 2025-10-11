@@ -1,0 +1,19 @@
+image:
+  registry: lscr.io
+  name: linuxserver/radarr
+  tag: latest
+# liveness:
+#   port: 7878
+#   path: /ping
+ndots: 2
+ports:
+  ClusterIP:
+    - port: 7878
+      subdomain: movies
+volumes:
+  persisted:
+    - /config
+  claims:
+    - claim: "{{ .Values.mediaStorageClaim }}"
+      mounts:
+        /: /storage

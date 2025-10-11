@@ -1,0 +1,97 @@
+bases:
+- ../../config/environments.yaml.gotmpl
+- ../../modules/templates.yaml.gotmpl
+---
+repositories:
+- name: keel
+  url: https://charts.keel.sh
+- name: prometheus-community
+  url: https://prometheus-community.github.io/helm-charts
+- name: grafana
+  url: https://grafana.github.io/helm-charts
+---
+releases:
+- inherit:
+  - template: persistenceStorage
+
+# - name: nas-persistence
+#   inherit:
+#   - template: storage
+#   values:
+#   - nfs:
+#       path: {{ .Values.persistencePath }}
+
+# - name: nas-backups
+#   inherit:
+#   - template: storage
+#   values:
+#   - nfs:
+#       path: /lab/data/backups
+
+# - name: pi-backups
+#   inherit:
+#   - template: storage
+#   values:
+#   - nfs:
+#       server: { { .Values.piIP }}
+#       path: /lab/data/backups
+
+# - name: backups
+#   inherit:
+#   - template: requiresNothing
+#   needs:
+#   - nas-persistence
+#   - nas-backups
+#   - pi-backups
+
+- name: startpage
+  inherit:
+  - template: requiresNothing
+
+- name: keel
+  namespace: kube-system
+  inherit:
+  - template: requiresNothing
+  values:
+  - keel:
+      basicauth:
+        enabled: true
+        user: {{ .Values.defaultUser }}
+        password: {{ .Values.defaultPassword }}
+      slack:
+        token: {{ .Values.slackToken }}
+
+# this storage is required as prometheus creates it own pvc
+- name: prometheus-persistence
+  inherit:
+  - template: storage
+  values:
+  - unclaimed: true
+    nfs:
+      path: {{ .Values.persistencePath }}/{{ .Values.namespace }}/prometheus/prometheus
+
+- name: prometheus
+  inherit:
+  - template: requiresPersistence # used by grafana (TODO: see if can split out)
+  values:
+  - kube-prometheus-stack:
+      grafana:
+        ingress:
+          hosts:
+          - monitor.{{ .Values.domain }}
+  needs:
+  - prometheus-persistence
+
+- name: loki
+  inherit:
+  - template: requiresPersistence
+  values:
+  - loki-stack:
+      loki:
+        persistence:
+          subPath: loki/data
+          existingClaim: persistence-{{ .Values.namespace }}
+
+- name: mariadb
+  inherit:
+  - template: requiresPersistence

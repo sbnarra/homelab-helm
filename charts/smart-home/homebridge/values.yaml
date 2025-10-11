@@ -1,0 +1,16 @@
+image:
+  name: homebridge/homebridge
+  tag: latest
+# env:
+#   KEY: val
+hostNetwork: true
+ports:
+  ClusterIP:
+  - port: 8581
+    subdomain: homebridge
+  LoadBalancer:
+  - port: 8581
+    name: homebridge
+volumes:
+  persisted:
+  - /homebridge

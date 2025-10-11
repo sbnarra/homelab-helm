@@ -1,0 +1,16 @@
+{{- if not .Values.unclaimed }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-{{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      type: {{ .Release.Name }}-{{ .Release.Namespace }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+{{- end }}

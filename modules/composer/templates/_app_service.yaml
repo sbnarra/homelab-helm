@@ -1,0 +1,32 @@
+{{- define "components.service" }}
+{{- range $type, $ports := .Values.ports }}
+{{- if ne $type "IngressOnly" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Release.Name }}-{{- if eq $type "ClusterIP" }}internal{{ else if eq $type "LoadBalancer" }}external{{ else }}{{ $type }}{{- end }}
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}-{{- if eq $type "ClusterIP" }}internal{{ else if eq $type "LoadBalancer" }}external{{ else }}{{ $type }}{{- end }}
+spec:
+  type: {{ $type }}
+  ports:
+  {{- range $ports }}
+  - name: {{ .name | default "web" }}
+    {{- if .targetPort }}
+    targetPort: {{ .targetPort }}
+    {{ else }}
+    targetPort: {{ .name | default "web" }}
+    {{- end }}
+    protocol: {{ .protocol | default "TCP" }}
+    port: {{ .port }}
+  {{- end }}
+  selector:
+    {{ $.Values.selectorKey | default "app.kubernetes.io/name" }}: {{ $.Values.selectorValue | default $.Release.Name }}
+  {{- if eq $type "LoadBalancer" }}
+  externalIPs:
+{{ $.Values.controlPlaneIPs | toYaml | indent 2 }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,22 @@
+{{ include "components.compose" . }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: x-forwarded-https
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Proto: "https"
+      X-Forwarded-Port: "443"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-forward-auth
+spec:
+  forwardAuth:
+    address: http://traefik-forward-auth-internal:4181
+    trustForwardHeader: true
+    authResponseHeaders:
+    - X-Forwarded-User

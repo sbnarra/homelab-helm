@@ -1,0 +1,25 @@
+image:
+  name: searxng/searxng
+  tag: latest
+releaseNotes: https://github.com/searxng/searxng/commits/master
+env:
+#   INSTANCE_NAME: "searxng"
+  BASE_URL: "https://searxng.{{ .Values.domain }}"
+  AUTOCOMPLETE: "true"
+liveness:
+  port: 8080
+ports:
+  ClusterIP:
+  - port: 8080
+    subdomain: search
+volumes:
+  config:
+  - path: /etc/searxng/limiter.toml
+    content: >-
+      {{ .Files.Get "configmap/limiter.toml" }}
+  - path: /etc/searxng/settings.yml
+    content: >-
+      {{ .Files.Get "configmap/settings.yml" }}
+  - path: /etc/searxng/uwsgi.ini
+    content: >-
+      {{ .Files.Get "configmap/uwsgi.ini" }}

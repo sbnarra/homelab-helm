@@ -1,0 +1,9 @@
+brew "ansible"
+brew "incus"
+brew "tgenv"
+brew "tfenv"
+brew "helm"
+brew "helmfile"
+# helm plugin install https://github.com/databus23/helm-diff
+brew "kubernetes-cli"
+brew "pre-commit"

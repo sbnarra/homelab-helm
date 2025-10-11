@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-{{ .Release.Namespace }}
+  labels:
+    type: {{ .Release.Name }}-{{ .Release.Namespace }}
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  {{- if .Values.host }}
+  hostPath:
+    path: {{ .Values.host.path }}
+  {{- else }}
+  nfs:
+    server: {{ tpl (get (get .Values.namespace_persistence .Release.Namespace) "source" | required "missing .Values.nfs.server OR .Values.namespace_nfs_ips.{{ .Release.Namespace }}") . }}
+    path: {{ (.Values.nfs).path | default (printf "%s/%s" .Values.persistencePath .Release.Namespace)  }}
+    readOnly: {{ (.Values.nfs).readOnly | default false  }}
+  {{- end }}

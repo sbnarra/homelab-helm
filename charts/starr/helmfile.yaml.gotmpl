@@ -1,0 +1,68 @@
+bases:
+- ../../config/environments.yaml.gotmpl
+- ../../modules/templates.yaml.gotmpl
+---
+releases:
+- inherit:
+  - template: persistenceStorage
+- inherit:
+  - template: mediaStorage
+- inherit:
+  - template: testMediaStorage
+
+- name: flaresolverr
+  inherit:
+  - template: requiresNothing
+
+- name: tdarr
+  inherit:
+  - template: requiresMedia
+
+- name: tdarr-client
+  inherit:
+  - template: requiresMedia
+
+- name: prowlarr
+  inherit:
+  - template: requiresPersistence
+  needs:
+  - flaresolverr
+
+- name: bazarr
+  inherit:
+  - template: requiresMedia
+  needs:
+  - prowlarr
+
+- name: lidarr
+  inherit:
+  - template: requiresMedia
+  needs:
+  - prowlarr
+  values:
+  - replicas: 0
+
+- name: readarr
+  inherit:
+  - template: requiresMedia
+  needs:
+  - prowlarr
+
+- name: sonarr
+  inherit:
+  - template: requiresMedia
+  needs:
+  - prowlarr
+
+- name: radarr
+  inherit:
+  - template: requiresMedia
+  needs:
+  - prowlarr
+
+- name: overseerr
+  inherit:
+  - template: requiresPersistence
+  needs:
+  - sonarr
+  - radarr

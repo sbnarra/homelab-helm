@@ -1,0 +1,70 @@
+domain: sbnarra.me
+isLive: true
+
+loadBalancerIP: 192.168.1.11
+controlPlaneIPs:
+- 192.168.1.11
+
+zigbeeHost: node-nas-default-a1
+threadHost: node-nas-default-a1
+
+persistencePath: /lab/persistence
+
+machine_ips:
+  r5c: 192.168.1.1
+  rx4: 192.168.1.2
+  op5: 192.168.1.3
+  rp4: 192.168.1.4
+
+namespace_persistence:
+  network:
+    source: "{{ .Values.machine_ips.r5c }}"
+    # sync:
+    backups:
+    - "{{ .Values.machine_ips.rx4 }}"
+    - "{{ .Values.machine_ips.rp4 }}"
+  tools:
+    source: "{{ .Values.machine_ips.r5c }}"
+    backups:
+    - "{{ .Values.machine_ips.rx4 }}"
+    - "{{ .Values.machine_ips.rp4 }}"  
+  ai:
+    source: "{{ .Values.machine_ips.r5c }}"
+    backups:
+    - "{{ .Values.machine_ips.rx4 }}"
+    - "{{ .Values.machine_ips.rp4 }}"
+  starr:
+    source: "{{ .Values.machine_ips.rx4 }}"
+    backups:
+    - "{{ .Values.machine_ips.r5c }}"
+    - "{{ .Values.machine_ips.rp4 }}"
+  media:
+    source: "{{ .Values.machine_ips.rx4 }}"
+    backups:
+    - "{{ .Values.machine_ips.r5c }}"
+    - "{{ .Values.machine_ips.rp4 }}"
+  printer:
+    source: "{{ .Values.machine_ips.rx4 }}"
+    backups:
+    - "{{ .Values.machine_ips.r5c }}"
+    - "{{ .Values.machine_ips.rp4 }}"
+  system:
+    source: "{{ .Values.machine_ips.rp4 }}"
+    backups:
+    - "{{ .Values.machine_ips.r5c }}"
+    - "{{ .Values.machine_ips.rx4 }}"
+  smart-home:
+    source: "{{ .Values.machine_ips.rp4 }}"
+    backups:
+    - "{{ .Values.machine_ips.r5c }}"
+    - "{{ .Values.machine_ips.rx4 }}"
+
+# keelPollSchedule: "@weekly"
+keelPollSchedule: "@every 1m"
+
+entryPoints:
+- web
+- websecure
+middlewares:
+- network-x-forwarded-https@kubernetescrd
+- network-traefik-forward-auth@kubernetescrd

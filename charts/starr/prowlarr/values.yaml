@@ -1,0 +1,15 @@
+image:
+  registry: lscr.io
+  name: linuxserver/prowlarr
+  tag: latest
+liveness:
+  port: 9696
+  path: /ping
+ndots: 2
+ports:
+  ClusterIP:
+    - port: 9696
+      subdomain: indexer
+volumes:
+  persisted:
+    - /config

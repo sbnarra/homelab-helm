@@ -1,0 +1,61 @@
+---
+templates:
+
+  requiresNothing:
+    chart: ./{{`{{ .Release.Name }}`}}
+    namespace: {{ exec "pwd" (list) | trim | base }}
+    values:
+    - environment: {{ .Environment.Name }}
+    - "../../config/{{ .Environment.Name }}/values.yaml"
+    secrets:
+    - "../../config/{{ .Environment.Name }}/secrets.sops.yaml"
+
+  requiresPersistence:
+    inherit:
+    - template: requiresNothing
+    needs:
+    - persistence
+
+  requiresMedia:
+    inherit:
+    - template: requiresPersistence
+    values:
+    - mediaStorageClaim: media-{{ exec "pwd" (list) | trim | base }}
+    needs:
+    - media
+
+  requiresTestMedia:
+    inherit:
+    - template: requiresPersistence
+    values:
+    - mediaStorageClaim: test-media-{{ exec "pwd" (list) | trim | base }}
+    needs:
+    - test-media
+
+########################################################
+
+  storage:
+    inherit:
+    - template: requiresNothing
+    chart: ../../modules/storage
+
+  persistenceStorage:
+    inherit:
+    - template: storage
+    name: persistence
+
+  mediaStorage:
+    inherit:
+    - template: storage
+    name: media
+    values:
+    - nfs:
+        path: /lab/media
+
+  testMediaStorage:
+    inherit:
+    - template: storage
+    name: test-media
+    values:
+    - nfs:
+        path: /lab/test-media

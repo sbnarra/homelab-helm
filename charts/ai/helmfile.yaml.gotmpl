@@ -1,0 +1,23 @@
+bases:
+- ../../config/environments.yaml.gotmpl
+- ../../modules/templates.yaml.gotmpl
+---
+releases:
+- inherit:
+  - template: persistenceStorage
+
+- name: searxng
+  inherit:
+  - template: requiresNothing
+
+- name: open-webui
+  inherit:
+  - template: requiresPersistence
+
+- name: ollama
+  inherit:
+  - template: requiresPersistence
+  # hooks:
+  # - events: ["prepare"]
+  #   showlogs: true
+  #   command: "./ollama/hooks/on-prepare.sh"

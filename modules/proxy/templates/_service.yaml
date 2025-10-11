@@ -1,0 +1,15 @@
+{{- define "components.service" -}}
+{{- range .Values.proxies }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}-proxy
+  labels:
+    app.kubernetes.io/name: {{ .name }}-proxy
+spec:
+  ports:
+  - port: {{ .port }}
+    targetPort: {{ .port }}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,40 @@
+image:
+  name: ollama/ollama
+  tag: latest
+env:
+  OLLAMA_HOST: 0.0.0.0:80
+  OLLAMA_MODELS: /models
+# keel is disabled as we're loading different images into different nodes based on hw
+# server original image, pc will use custom rocm image
+disableKeel: true
+affinity:
+  required: true
+  labels:
+  - key: gpu
+    value: amd
+liveness:
+  port: 80
+ports:
+  ClusterIP:
+  - port: 80
+volumes:
+  persisted:
+  - /models
+#   host:
+#   - hostPath: /dev/dri/card1
+#     containerPath: /dev/dri/card1
+#     type: CharDevice
+#   - hostPath: /dev/dri/renderD128
+#     containerPath: /dev/dri/renderD128
+#     type: CharDevice
+#   - hostPath: /dev/kfd
+#     containerPath: /dev/kfd
+#     type: CharDevice
+# hostIPC: true
+# security:
+#   privileged: true
+#   seccomp: Unconfined
+#   capabilities:
+#   - SYS_PTRACE
+gpu:
+  enabled: true

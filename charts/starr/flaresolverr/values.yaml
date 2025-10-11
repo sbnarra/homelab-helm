@@ -1,0 +1,9 @@
+image:
+  registry: ghcr.io
+  name: flaresolverr/flaresolverr
+  tag: latest
+liveness:
+  port: 8191
+ports:
+  ClusterIP:
+    - port: 8191

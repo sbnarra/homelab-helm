@@ -1,0 +1,10 @@
+# https://github.com/rhasspy/wyoming-openwakeword#docker-image
+image:
+  name: rhasspy/wyoming-openwakeword
+  tag: latest
+command:
+  - --preload-model
+  - 'ok_nabu'
+ports:
+  ClusterIP:
+  - port: 10400

@@ -1,0 +1,14 @@
+apiVersion: v2
+name: keel
+version: 0.0.1
+icon: https://helm.sh/img/helm.svg
+
+dependencies:
+  - name: keel
+    version: "^0"
+    repository: "@keel"
+  - name: composer
+    version: 0.0.1
+    repository: file://../../../modules/composer
+    import-values:
+      - standard

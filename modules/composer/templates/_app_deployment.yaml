@@ -1,0 +1,30 @@
+{{- define "components.deployment" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+  annotations:
+    {{- include "annotations.keel" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+    type: {{ .Values.deploymentStrategy }}
+    {{- if eq "RollingUpdate" .Values.deploymentStrategy }}
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+    {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}
+    spec:
+      {{- include "spec.affinity" . | indent 6 }}
+      {{- include "spec.containers" . | indent 6 }}
+{{- end }}

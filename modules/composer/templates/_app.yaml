@@ -1,0 +1,19 @@
+{{- define "components.compose" -}}
+
+{{ include "components.secrets" . }}
+{{ include "components.configmap" . }}
+
+{{ if eq .Values.type "cronjob" }}
+{{ include "components.cronjob" . }}
+
+{{ else if eq .Values.type "daemonset" }}
+{{ include "components.daemonset" . }}
+
+{{ else if eq .Values.type "deployment" }}
+{{ include "components.deployment" . }}
+{{ include "components.service" . }}
+{{ include "components.ingress" . }}
+
+{{ end }}
+
+{{- end -}}

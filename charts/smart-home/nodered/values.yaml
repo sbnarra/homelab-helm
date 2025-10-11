@@ -1,0 +1,20 @@
+image:
+  name: nodered/node-red
+  tag: latest
+releaseNotes: https://github.com/node-red/node-red/releases
+liveness:
+  port: 1880
+ports:
+  ClusterIP:
+    - port: 1880
+      subdomain: nodered
+volumes:
+  host:
+  - hostPath: /etc/localtime
+    containerPath: /etc/localtime
+    type: File
+  - hostPath: /etc/timezone
+    containerPath: /etc/timezone
+    type: File
+  persisted:
+    - /data

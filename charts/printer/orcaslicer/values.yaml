@@ -1,0 +1,19 @@
+image:
+  registry: lscr.io
+  name: linuxserver/orcaslicer
+  tag: latest
+liveness:
+  port: 3000
+ports:
+  ClusterIP:
+  - port: 3000
+    subdomain: slicer
+volumes:
+  persisted:
+  - /config
+  claims:
+  - claim: freecad-exports-{{ .Release.Namespace }}
+    mounts:
+      config/exports: /config/freecad
+gpu:
+  enabled: true

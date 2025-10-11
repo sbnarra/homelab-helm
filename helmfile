@@ -1,0 +1,55 @@
+#!/bin/bash
+set -e
+
+project_dir=$(dirname $0)
+helmfile_root_dir=$project_dir/charts
+charts=$(grep path $helmfile_root_dir/helmfile.yaml.gotmpl | awk '{print $3}' | cut -d'/' -f1)
+
+main() {
+  export HELMFILE_ENVIRONMENT=${HELMFILE_ENVIRONMENT:-${env:-test}}
+  echo "HELMFILE_ENVIRONMENT='${HELMFILE_ENVIRONMENT}'"
+
+  if [ ! -e ./helmfile.yaml.gotmpl ]; then
+    select_helmfile
+  else
+    helmfile_dir=$PWD
+  fi
+
+  cd $helmfile_dir && \
+    # helmfile --skip-deps --environment ${env} ${@:-template}
+    helmfile ${@:-template}
+}
+
+select_helmfile() {
+  echo "[ 0] *all*"
+  i=1
+
+  for chart in $charts; do
+      i=$(printf "%2d" $i)
+      echo "[$i] $chart"
+      i=$(( $i + 1 ))
+  done
+  echo -n "Select helmfile: "
+  read selected
+
+  if [ "$selected" == "0" ]; then
+    helmfile_dir=$helmfile_root_dir
+    return 0
+  fi
+
+  i=1
+  for chart in $charts; do
+    if [ "$selected" == "$i" ]; then
+      helmfile_dir=$helmfile_root_dir/$chart
+      break
+    fi
+    i=$(( $i + 1 ))
+  done
+
+  if [ "$helmfile_dir" == "" ]; then
+      echo "unknown option: '$selected'"
+      select_helmfile
+  fi
+}
+
+main $@

@@ -1,0 +1,255 @@
+{{- define "spec.containers" }}
+
+{{- if .Values.nodeSelector }}
+nodeSelector:
+  {{- range $k, $v := .Values.nodeSelector }}
+  {{ $k }}: {{ tpl $v $ }}
+  {{- end }}
+{{- end }}
+
+{{- if .Values.security.sysctls }}
+securityContext:
+  sysctls:
+  {{- range $k, $v := .Values.security.sysctls }}
+  - name: {{ $k | quote }}
+    value: {{ $v | quote }}
+  {{- end }}
+{{- end }}
+
+hostname: {{ .Release.Name }}
+hostNetwork: {{ .Values.hostNetwork }}
+hostIPC: {{ .Values.hostIPC }}
+dnsPolicy: {{ .Values.dnsPolicy | default "ClusterFirst" }}
+dnsConfig:
+  options:
+  - name: ndots
+    value: {{ .Values.ndots | default 1 | quote }}
+  {{- if .Values.nameservers }}
+  nameservers:
+    {{- range .Values.nameservers }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+
+containers:
+- name: {{ .Release.Name }}
+  {{- if .Values.registryPortOverrides.enabled }}
+  image: {{ .Values.registryIP }}:{{ get .Values.registryPortOverrides .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
+  {{- else }}
+  # image: {{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
+  image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+  {{- end }}
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
+  {{- if .Values.command }}
+  command:
+  {{- range .Values.command }}
+  - {{ tpl . $ | quote }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.args }}
+  args:
+  {{- range .Values.args }}
+  - {{ tpl . $ | quote }}
+  {{- end }}
+  {{- end }}
+  securityContext:
+    privileged: {{ or .Values.security.privileged .Values.gpu.enabled  }}
+    {{- if .Values.security.capabilities }}
+    capabilities:
+      add:
+      {{- range .Values.security.capabilities }}
+      - {{ . }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.security.seccomp }}
+    seccompProfile:
+      type: {{ .Values.security.seccomp }}
+    {{- end }}
+  {{- if .Values.liveness }}
+  livenessProbe:
+    httpGet:
+      path: {{ .Values.liveness.path | default "/" }}
+      port: {{ .Values.liveness.port | default "web" }}
+      {{- if .Values.liveness.headers }}
+      httpHeaders:
+      {{- range .Values.liveness.headers }}
+      - name: {{ tpl .name $ }}
+        value: {{ tpl .value $ }}
+      {{- end }}
+      {{- end }}
+    initialDelaySeconds: {{ .Values.liveness.delay | default "10" }}
+    periodSeconds: {{ .Values.liveness.interval | default "30" }}
+    timeoutSeconds: {{ .Values.liveness.timeout | default "15" }}
+    failureThreshold: {{ .Values.liveness.threshold | default "4" }}
+  {{- end }}
+  {{- if and .Values.liveness (not .Values.liveness.noStartupProbe) }}
+  startupProbe:
+    httpGet:
+      path: {{ .Values.startup.path | default .Values.liveness.path | default "/" }}
+      port: {{ .Values.startup.port | default .Values.liveness.port | default "web" }}
+      {{- if .Values.startup.headers | default .Values.liveness.headers }}
+      httpHeaders:
+      {{- range .Values.startup.headers | default .Values.liveness.headers }}
+      - name: {{ tpl .name $ }}
+        value: {{ tpl .value $ }}
+      {{- end }}
+      {{- end }}
+    initialDelaySeconds: {{ .Values.startup.delay | default .Values.liveness.delay | default "10" }}
+    periodSeconds: {{ .Values.startup.interval | default .Values.liveness.interval | default "10" }}
+    timeoutSeconds: {{ .Values.startup.timeout | default .Values.liveness.timeout | default "10" }}
+    failureThreshold: {{ .Values.startup.threshold | default .Values.liveness.threshold | default "8" }}
+  {{- end }}
+  env:
+  - name: NODENAME
+    valueFrom:
+      fieldRef:
+        fieldPath: spec.nodeName
+  - name: NAMESPACE
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.namespace
+  - name: POD_IP
+    valueFrom:
+      fieldRef:
+        fieldPath: status.podIP
+  {{- range $k, $v := .Values.fieldEnv }}
+  - name: {{ $k }}
+    valueFrom:
+      fieldRef:
+        fieldPath: {{ tpl (toString $v) $ | quote }}
+  {{- end }}
+  - name: TZ
+    value: Europe/London
+  - name: PUID
+    value: {{ .Values.puid | default "1000" | quote }}
+  - name: PGID
+    value: {{ .Values.pgid | default "1000" | quote }}
+  - name: UMASK
+    value: "002"
+  {{- range $k, $v := .Values.env }}
+  - name: {{ $k }}
+    value: {{ tpl (toString $v) $ | quote }}
+  {{- end }}
+  {{- range $k, $v := .Values.secretEnv }}
+  - name: {{ $k }}
+    valueFrom:
+      secretKeyRef:
+        name: {{ $.Release.Name }}-env-{{ include "secrets.rendered" $ | toYaml | sha1sum }}
+        key: {{ $k }}
+  {{- end }}
+  {{- if .Values.ports }}
+  ports:
+  {{- range .Values.ports.ClusterIP }}
+  - containerPort: {{ .port }}
+    name: {{ .name | default "web" }}
+    protocol: {{ .protocol | default "TCP" }}
+  {{- end }}
+  {{- range .Values.ports.LoadBalancer }}
+  - containerPort: {{ .port }}
+    name: {{ .name | default "web" }}
+    protocol: {{ .protocol | default "TCP" }}
+  {{- end }}
+  {{- end }}
+{{- include "volumeMounts" . }}
+
+{{- if .Values.initContainers }}
+initContainers:
+{{- range .Values.initContainers }}
+- name: {{ .name }}
+  image: {{ .image }}
+  command:
+  {{- range .command }}
+  - {{ . }}
+  {{- end }}
+{{- include "volumeMounts" $ }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.volumes }}
+volumes:
+{{- if .Values.gpu.enabled }}
+- name: host-gpu
+  hostPath:
+    path: /dev/dri
+    type: Directory
+{{- end }}
+{{- range $host := .Values.volumes.host }}
+- name: host-{{ $host | toString | sha1sum }}
+  hostPath:
+    path: {{ $host.hostPath }}
+    type: {{ $host.type }}
+{{- end }}
+{{- range .Values.volumes.config }}
+- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+  configMap:
+    name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+    defaultMode: {{ .mode | default "0644" }}
+{{- end }}
+{{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+- name: {{ $.Release.Name }}-linuxserver-gpu
+  configMap:
+    name: {{ $.Release.Name }}-linuxserver-gpu
+    defaultMode: 0644
+{{- end }}
+{{- range .Values.volumes.secret }}
+- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+  secret:
+    secretName: {{ $.Release.Name }}-vol-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+    defaultMode: {{ .mode | default "0644" }}
+{{- end }}
+{{- if .Values.volumes.persisted }}
+- name: persisted
+  persistentVolumeClaim:
+    claimName: persistence-{{ .Release.Namespace }}
+{{- end }}
+{{- range .Values.volumes.claims }}
+- name: claim-{{ tpl .claim $ }}
+  persistentVolumeClaim:
+    claimName: {{ tpl .claim $ }}
+{{- end }}
+{{- end }}
+
+{{- end }}
+
+{{- define "volumeMounts" }}
+  {{- if .Values.volumes }}
+  volumeMounts:
+  {{- range .Values.volumes.persisted }}
+  - name: persisted
+    mountPath: {{ . }}
+    subPath: {{ $.Release.Name }}{{ . }}
+  {{- end }}
+  {{- range .Values.volumes.secret }}
+  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+    mountPath: {{ .path }}
+    subPath: {{ base .path }}
+  {{- end }}
+  {{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+  - name: {{ $.Release.Name }}-linuxserver-gpu
+    mountPath: /custom-cont-init.d/00_gpu-render-group
+    subPath: 00_gpu-render-group
+  {{- end }}
+  {{- range .Values.volumes.config }}
+  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+    mountPath: {{ .path }}
+    subPath: {{ base .path }}
+  {{- end }}
+  {{- range $claim := .Values.volumes.claims }}
+  {{- range $subPath, $container := .mounts }}
+  - name: claim-{{ tpl $claim.claim $ }}
+    mountPath: {{ tpl $container $ }}
+    {{- if ne $subPath "/" }}
+    subPath: {{ tpl $subPath $ }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.gpu.enabled }}
+  - name: host-gpu
+    mountPath: /dev/dri
+  {{- end }}
+  {{- range $host := .Values.volumes.host }}
+  - name: host-{{ $host | toString | sha1sum }}
+    mountPath: {{ $host.containerPath }}
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,20 @@
+image:
+  name: koenkk/zigbee2mqtt
+  tag: latest
+deploymentStrategy: Recreate
+ports:
+  ClusterIP:
+  - port: 8080
+    subdomain: zigbee
+volumes:
+  persisted:
+  - /app/data
+  host:
+  - hostPath: /run/udev
+    containerPath: /run/udev
+    type: Directory
+  - hostPath: /dev/serial/by-id/usb-Nabu_Casa_SkyConnect_v1.0_b6e12574b5d8ed119c0d6b6162c613ac-if00-port0
+    containerPath: /dev/ttyUSB0
+    type: CharDevice
+security:
+  privileged: true

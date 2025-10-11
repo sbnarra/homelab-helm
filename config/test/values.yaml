@@ -1,0 +1,47 @@
+domain: sbnarra.test
+isLive: false
+
+loadBalancerIP: 192.168.1.92
+controlPlaneIPs:
+- 192.168.1.111
+registryIP: 192.168.1.69
+nasIP: 192.168.1.68
+piIP: 192.168.9.0
+
+zigbeeHost: node-test-default-a1
+threadHost: node-test-default-a1
+
+machine_ips:
+  vm_host: 192.168.1.101
+
+namespace_persistence:
+  network:
+    source: "{{ .Values.machine_ips.vm_host }}"
+    backups: []
+  tools:
+    source: "{{ .Values.machine_ips.vm_host }}"
+    backups: []
+  ai:
+    source: "{{ .Values.machine_ips.vm_host }}"
+    backups: []
+  starr:
+    source: "{{ .Values.machine_ips.vm_host }}"
+    backups: []
+  media:
+    source: "{{ .Values.machine_ips.vm_host }}"
+    backups: []
+  printer:
+    source: "{{ .Values.machine_ips.vm_host }}"
+    backups: []
+  system:
+    source: "{{ .Values.machine_ips.vm_host }}"
+    backups: []
+  smart-home:
+    source: "{{ .Values.machine_ips.vm_host }}"
+    backups: []
+
+entryPoints:
+- web
+middlewares: []
+# - network-x-forwarded-https@kubernetescrd
+# - network-traefik-forward-auth@kubernetescrd

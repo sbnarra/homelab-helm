@@ -1,0 +1,86 @@
+insecureRegistry: true
+exports:
+  standard:
+    type: deployment
+    image:
+      registry: docker.io # TODO: remove this, name covers it OR default to "" and remove from name where added in charts, prefer the latter
+      name: null
+      tag: null
+      architecture: null
+      pullPolicy: IfNotPresent
+    deploymentStrategy: RollingUpdate
+    registryPortOverrides: # TODO: remove this
+      enabled: false # if set to false, keel needs insecureRegistry also set to fale
+      docker.io: 5000
+      ghcr.io: 5001
+      lscr.io: 5002
+    # liveness:
+    #   path: /
+    #   port: 80
+    #   delay: 2
+    #   interval: 10
+    #   timeout: 5
+    #   threshold: 3
+    startup: {}
+    #   path: /
+    #   port: 80
+    #   delay: 2
+    #   interval: 10
+    #   timeout: 5
+    #   threshold: 3
+    replicas: 1
+    hostNetwork: false
+    hostIPC: false # TODO: remove this, only used by ollama old gpu.yaml
+    nodeSelector: {}
+    affinity:
+      required: false
+      labels: {}
+    env: {}
+    secretEnv: {}
+    args: []
+    command: []
+    nameservers: []
+    gpu:
+      enabled: false
+      user: abc # linuxserver specific by default
+    ports: {}
+      # ClusterIP:
+      #   - port: 80
+      #     protocol: TCP
+      #     subdomain: app-name
+      #     unprotected: false
+      # LoadBalancer:
+      #   - port: 8080
+      #     protocol: TCP
+    volumes:
+      persisted: []
+        # - /var
+        # - /opt
+      claims: []
+        # - claim: xxx
+        #   mounts:
+        #    - /hostSubPath: /containerPath
+      secret: []
+        #  - path: /home/user/.ssh/id_ecdsa.pub
+        #    content: somesecretfilecontents
+        #    mode: "0700"
+      config: []
+        # - path: /etc/service.rc
+        #   content: someconfigcontents
+        #   mode: "0700"
+      host: []
+        # - hostPath: /hostPath
+        #   containerPath: /containerPath
+        #   type: https://kubernetes.io/docs/concepts/storage/volumes/#hostpath-volume-types
+    security:
+      privileged: false
+      seccomp: null
+      capabilities: []
+        # - "NET_ADMIN"
+        # - "SYS_MODULE"
+      sysctls: {}
+        # net.ipv4.conf.all.src_valid_mark: "1"
+
+    ## CronJob
+    # schedule: "* * * * *"
+    # scheduleDisabled: true

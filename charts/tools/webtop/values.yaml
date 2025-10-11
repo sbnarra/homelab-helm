@@ -1,0 +1,32 @@
+image:
+  registry: lscr.io
+  name: linuxserver/webtop
+  tag: debian-kde
+security:
+  privileged: false
+env: # https://mods.linuxserver.io/?mod=universal
+  DOCKER_MODS: "linuxserver/mods:universal-package-install"
+  TITLE: Portal
+  DISABLE_IPV6: true
+liveness:
+  port: 3000
+  delay: 10
+ports:
+  ClusterIP:
+  - port: 3000
+    subdomain: desktop
+volumes:
+  config:
+  - path: /custom-cont-init.d/init-ssh.sh
+    content: |
+      cp -a /static/.ssh/* /config/.ssh/.
+      chown abc:abc /config/.ssh/*
+  secret:
+  - path: /static/.ssh/id_ecdsa
+    content: "{{ .Values.private_key }}"
+    mode: "0600"
+  - path: /static/.ssh/id_ecdsa.pub
+    content: "{{ .Values.public_key }}"
+    mode: "0644"
+  persisted:
+  - /config

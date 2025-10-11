@@ -1,0 +1,10 @@
+# don't create PVC
+unclaimed: false
+
+# ...defaults to nfs, host will override nfs
+# host:
+#   path: /
+# nfs:
+#   server: {{ .Values.nasIP }}
+#   path: /lab/persistence
+#   readOnly: false

@@ -1,0 +1,19 @@
+image:
+  name: traefik/whoami
+  tag: latest
+releaseNotes: https://hub.docker.com/r/traefik/whoami/tags
+liveness:
+  port: 80
+ports:
+  ClusterIP:
+  - port: 80
+    subdomain: whoami
+    # unprotected: true
+# affinity:
+#   required: true
+#   labels:
+#     s:
+#     - ks
+#     - jkds
+#     foo:
+#     - bar

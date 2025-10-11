@@ -1,0 +1,17 @@
+image:
+  registry: lscr.io
+  name: linuxserver/piper
+  tag: latest
+env:
+  PIPER_VOICE: en_US-lessac-medium
+  # PIPER_LENGTH: 1.0 #optional
+  # PIPER_NOISE: 0.667 #optional
+  # PIPER_NOISEW: 0.333 #optional
+  # PIPER_SPEAKER: 0 #optional
+  # PIPER_PROCS: 1 #optional
+ports:
+  ClusterIP:
+  - port: 10200
+volumes:
+  persisted:
+  - /config

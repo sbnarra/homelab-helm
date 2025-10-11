@@ -1,0 +1,9 @@
+apiVersion: v2
+name: prometheus
+version: 0.0.1
+icon: https://helm.sh/img/helm.svg
+
+dependencies:
+  - name: kube-prometheus-stack
+    version: "^67"
+    repository: "@prometheus-community"

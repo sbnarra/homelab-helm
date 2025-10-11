@@ -1,0 +1,7 @@
+proxies: []
+# - name: foobar
+#   port: 0000
+#   ip: 192.168.1.x
+#   protocol: TCP
+#   appProtocol: HTTP
+#   protected: true

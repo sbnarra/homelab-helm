@@ -1,0 +1,18 @@
+image:
+  registry: lscr.io
+  name: linuxserver/emby
+  tag: latest
+ports:
+  ClusterIP:
+  - port: 8096
+    subdomain: media
+  LoadBalancer:
+  - port: 8096
+    name: public
+volumes:
+  persisted:
+  - /config
+  claims:
+  - claim: "{{ .Values.mediaStorageClaim }}"
+    mounts:
+      library: /media

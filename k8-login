@@ -1,0 +1,66 @@
+#!/bin/bash
+
+current_namespace=$(kubectl config view --minify -o jsonpath='{..namespace}')
+set -e
+
+error_handler() {
+  local exit_code=$?
+  echo "Fatal Error: $exit_code" >&2
+}
+trap error_handler ERR
+
+remote_ip=$([ "$1" == "live" ] && \
+    echo "192.168.1.11" || \
+  ([ "$1" == "pc" ] && \
+    echo "192.168.1.103" || \
+    echo "192.168.1.111"))
+
+ssh_cmd="ssh -q lab@$remote_ip"
+remote_hostname=$($ssh_cmd "hostname")
+
+echo "Fetching config from $remote_hostname ($remote_ip)..."
+
+tmp_kube_config="/tmp/${remote_hostname}.kube.config"
+$ssh_cmd "cat ~/.kube/config" > "$tmp_kube_config"
+
+# Use sed to rename cluster, user, and context in the raw YAML
+# This avoids the complexity of kubectl rename commands
+# sed -i.bak \
+#   -e "s/name: kubernetes-admin@kubernetes/name: ${remote_hostname}/g" \
+#   -e "s/name: kubernetes-admin/name: ${remote_hostname}-user/g" \
+#   -e "s/name: kubernetes$/name: ${remote_hostname}-cluster/g" \
+#   -e "s/cluster: kubernetes$/cluster: ${remote_hostname}-cluster/g" \
+#   -e "s/user: kubernetes-admin$/user: ${remote_hostname}-user/g" \
+#   "$tmp_kube_config"
+sed -i.bak \
+  -e "s/name: kubernetes-admin@${remote_hostname}/name: ${remote_hostname}/g" \
+  -e "s/name: kubernetes-admin/name: ${remote_hostname}-user/g" \
+  -e "s/user: kubernetes-admin$/user: ${remote_hostname}-user/g" \
+  "$tmp_kube_config"
+
+# Merge configs
+if [ -e ~/.kube/config ]; then
+    echo "Merging with existing kubeconfig..."
+    cp ~/.kube/config ~/.kube/config.backup.$(date +%Y%m%d-%H%M%S)
+    
+    KUBECONFIG="$tmp_kube_config:$HOME/.kube/config" \
+        kubectl config view --merge --flatten > /tmp/kube.config
+    cp /tmp/kube.config ~/.kube/config
+else
+    echo "Creating new kubeconfig..."
+    mkdir -p ~/.kube/
+    cp "$tmp_kube_config" ~/.kube/config
+fi
+
+chmod 600 ~/.kube/config
+
+# Restore namespace context
+
+kubectl config use-context $remote_hostname
+kubectl config set-context --current --namespace "${current_namespace:-default}"
+
+# Clean up
+rm -f "$tmp_kube_config" /tmp/kube.config
+
+echo "Successfully merged config from $remote_hostname"
+kubectl config get-contexts

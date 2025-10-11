@@ -1,0 +1,9 @@
+dependencies:
+- name: keel
+  repository: https://charts.keel.sh
+  version: 0.9.11
+- name: composer
+  repository: file://../../../modules/composer
+  version: 0.0.1
+digest: sha256:6aa27211f63ae1bf6c5a69e4c6b9ac97837bba73e081da7e479cd499bc8cfcda
+generated: "2025-01-28T13:33:08.106760982Z"

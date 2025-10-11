@@ -1,0 +1,80 @@
+{{- define "components.ingress" }}
+{{- range $type, $ports := .Values.ports }}
+
+{{- if or (eq $type "ClusterIP") (eq $type "IngressOnly") }}
+
+{{- range $ports }}
+{{- if .subdomain }}
+{{- if not .https }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: {{ join "," $.Values.entryPoints }}
+    {{- if not .unprotected }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ join "," $.Values.middlewares }}
+    {{- end }}
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: {{ tpl .subdomain $ }}.{{ $.Values.domain }}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            {{- if .service }}
+            name: {{ .service }}
+            {{ else }}
+            name: {{ $.Release.Name }}-{{- if eq $type "ClusterIP" }}internal{{ else if eq $type "LoadBalancer" }}external{{ else }}{{ $type }}{{- end }}
+            {{- end }}
+            port:
+              {{- if .number }}
+              number: {{ .number }}
+              {{ else }}
+              name: {{ .name | default "web" }}
+              {{- end }}
+{{ else }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
+spec:
+  entryPoints: {{ $.Values.entryPoints }}
+  routes:
+  - match: Host(`{{ tpl .subdomain $ }}.{{ $.Values.domain }}`)
+    kind: Rule
+    {{- if not .unprotected }}
+    middlewares:
+    {{- range .Values.middlewares }}
+    - name: {{ . }}
+    {{- end }}
+    {{- end }}
+    services:
+    - name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}-internal
+      port: {{ .port }}
+      scheme: https
+      serversTransport: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
+spec:
+  insecureSkipVerify: true
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- end }}
+
+{{- end }}
+{{- end }}

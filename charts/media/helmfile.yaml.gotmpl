@@ -1,0 +1,25 @@
+bases:
+- ../../config/environments.yaml.gotmpl
+- ../../modules/templates.yaml.gotmpl
+---
+releases:
+- inherit:
+  - template: persistenceStorage
+- inherit:
+  - template: mediaStorage
+
+- name: emby
+  inherit:
+  - template: requiresMedia
+
+- name: calibre
+  inherit:
+  - template: requiresMedia
+
+- name: sabnzbd
+  inherit:
+  - template: requiresMedia
+
+- name: qbitvpn
+  inherit:
+  - template: requiresMedia

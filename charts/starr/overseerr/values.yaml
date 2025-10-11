@@ -1,0 +1,13 @@
+image:
+  registry: lscr.io
+  name: linuxserver/overseerr
+  tag: latest
+liveness:
+  port: 5055
+ports:
+  ClusterIP:
+  - port: 5055
+    subdomain: searcher
+volumes:
+  persisted:
+  - /config

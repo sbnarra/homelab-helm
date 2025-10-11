@@ -1,0 +1,15 @@
+image:
+  registry: lscr.io
+  name: linuxserver/freecad
+  tag: latest
+liveness:
+  port: 3000
+ports:
+  ClusterIP:
+  - port: 3000
+    subdomain: cad
+volumes:
+  persisted:
+  - /config
+gpu:
+  enabled: true

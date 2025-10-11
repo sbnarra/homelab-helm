@@ -1,0 +1,6 @@
+dependencies:
+- name: composer
+  repository: file://../../../modules/composer
+  version: 0.0.1
+digest: sha256:8a891b8a91caa604fb5f4b68f33fe4955a0885e431cb1d28ebde98f510659d24
+generated: "2025-04-17T02:10:41.633442293+01:00"

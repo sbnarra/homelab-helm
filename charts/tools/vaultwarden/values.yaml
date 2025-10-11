@@ -1,0 +1,22 @@
+image:
+  name: vaultwarden/server
+  tag: latest
+releaseNotes: https://github.com/dani-garcia/vaultwarden/releases
+env:
+  WEBSOCKET_ENABLED: "false"
+  WEB_VAULT_ENABLED: "true"
+  SIGNUPS_ALLOWED: "false"
+  INVITATIONS_ALLOWED: "false"
+  SHOW_PASSWORD_HINT: "false"
+  ADMIN_TOKEN : "$argon2id$v=19$m=65540,t=3,p=4$wnU36ry/HiacLyFjTUDd/y8yBvDK/0f80LRMkJqdzAY$EPNMW78FVfkUwNvkWr0ijiKEOL1whNaS9E1y8mcwHxM"
+  DOMAIN : "https://vault.{{ .Values.domain }}"
+liveness:
+  port: 80
+ports:
+  ClusterIP:
+    - port: 80
+      subdomain: vault
+      unprotected: true
+volumes:
+  persisted:
+    - /data

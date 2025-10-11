@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>sbnarra.me</title>
+      <!-- Inline CSS for a clean, responsive, minimalist design -->
+      <style>
+         body {
+         margin: 0;
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         background: #f4f4f4;
+         color: #333;
+         line-height: 1.6;
+         padding: 10px;
+         }
+         header {
+         text-align: center;
+         margin-bottom: 20px;
+         }
+         h1 {
+         margin-bottom: 0.2em;
+         }
+         form#searchForm {
+         margin: 15px auto;
+         max-width: 600px;
+         }
+         form#searchForm input[type="search"] {
+         width: 100%;
+         padding: 10px;
+         font-size: 1.2em;
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         box-sizing: border-box;
+         }
+         .services {
+         max-width: 800px;
+         margin: auto;
+         }
+         .namespace {
+         margin-bottom: 30px;
+         }
+         .namespace h2 {
+         font-size: 1.3em;
+         border-bottom: 2px solid #ccc;
+         padding-bottom: 5px;
+         margin-bottom: 10px;
+         }
+         .service-item {
+         list-style: none;
+         margin: 5px 0;
+         }
+         .service-link {
+         display: flex;
+         align-items: center;
+         text-decoration: none;
+         padding: 8px;
+         border-radius: 4px;
+         transition: background 0.2s;
+         color: inherit;
+         }
+         .service-link:hover {
+         background: #e2e2e2;
+         }
+         .service-icon {
+         margin-right: 10px;
+         }
+         /* Loader & error styling */
+         .loader, .error {
+         text-align: center;
+         padding: 20px;
+         font-size: 1.1em;
+         }
+         /* Small devices tweaks */
+         @media (max-width: 600px) {
+         h1 { font-size: 1.8em; }
+         .namespace h2 { font-size: 1.2em; }
+         }
+      </style>
+   </head>
+   <body>
+      <header>
+         <!-- <h1>Services</h1> -->
+         <!-- SearXNG search box (opens a new tab) -->
+         <form id="searchForm" action="https://search.sbnarra.me" method="GET" target="_blank">
+            <input type="search" name="q" placeholder="Search the web..." autofocus />
+         </form>
+      </header>
+      <div id="content">
+         <div id="loader" class="loader">Loading services…</div>
+         <div id="error" class="error" style="display:none;">Could not load services configuration.</div>
+         <div class="services" id="services"></div>
+      </div>
+      <!-- Load Feather Icons from CDN -->
+      <script src="https://unpkg.com/feather-icons"></script>
+      <script>
+         // Group services by namespace for easier navigation.
+         function groupByNamespace(services) {
+         return services.reduce((groups, service) => {
+         (groups[service.namespace] = groups[service.namespace] || []).push(service);
+         return groups;
+         }, {});
+         }
+         
+         // Render the service list into the page.
+         function renderServices(services) {
+         const container = document.getElementById('services');
+         container.innerHTML = ''; // Clear any previous messages
+         const groups = groupByNamespace(services);
+         
+         // For each namespace group, create a section with a header and list items.
+        //  Object.keys(groups).sort().forEach(namespace => {
+         Object.keys(groups).forEach(namespace => {
+         const nsSection = document.createElement('div');
+         nsSection.className = 'namespace';
+         const nsHeading = document.createElement('h2');
+         nsHeading.textContent = namespace;
+         nsSection.appendChild(nsHeading);
+         
+         const ul = document.createElement('ul');
+         groups[namespace].forEach(service => {
+         const li = document.createElement('li');
+         li.className = 'service-item';
+         
+         // Always prepend https:// regardless of what's in the JSON.
+         const fullUrl = (service.protocol || "https") + "://" + service.url;
+
+         
+         const a = document.createElement('a');
+         a.className = 'service-link';
+         a.href = fullUrl;
+         a.target = '_blank';
+         
+         // Optionally add an icon if provided (using Feather Icons).
+         if (service.icon) {
+         const iconSpan = document.createElement('span');
+         iconSpan.className = 'service-icon';
+         iconSpan.setAttribute('data-feather', service.icon);
+         a.appendChild(iconSpan);
+         }
+         // Append text: "name / url".
+         const textNode = document.createTextNode(`${service.name} / ${service.url}`);
+         a.appendChild(textNode);
+         li.appendChild(a);
+         ul.appendChild(li);
+         });
+         nsSection.appendChild(ul);
+         container.appendChild(nsSection);
+         });
+         // Replace any feather icon placeholders.
+         feather.replace();
+         }
+         
+         // Fallback service if loading fails or data is in the wrong format.
+         function loadFallbackService() {
+         const fallback = [{
+         namespace: "fallback",
+         name: "failure",
+         url: "failure.sbnarra.me",
+         icon: "alert-circle"
+         }];
+         renderServices(fallback);
+         }
+         
+         // Fetch the services.json file and render its contents after validation.
+         fetch('services.json')
+         .then(response => {
+         if (!response.ok) throw new Error("Network response was not ok");
+         return response.json();
+         })
+         .then(data => {
+         document.getElementById('loader').style.display = 'none';
+         // Check if data is either an array or contains a top-level "services" array.
+         let servicesData;
+         if (Array.isArray(data)) {
+         servicesData = data;
+         } else if (Array.isArray(data.services)) {
+         servicesData = data.services;
+         } else {
+         console.error("Error: The loaded services data is not an array:", data);
+         loadFallbackService();
+         return;
+         }
+         renderServices(servicesData);
+         })
+         .catch(err => {
+         console.error("Error loading services:", err);
+         document.getElementById('loader').style.display = 'none';
+         document.getElementById('error').style.display = 'block';
+         loadFallbackService();
+         });
+      </script> 
+   </body>
+</html>

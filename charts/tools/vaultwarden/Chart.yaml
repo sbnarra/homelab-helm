@@ -1,0 +1,11 @@
+apiVersion: v2
+name: vaultwarden
+version: 0.0.1
+icon: https://helm.sh/img/helm.svg
+
+dependencies:
+  - name: composer
+    version: 0.0.1
+    repository: file://../../../modules/composer
+    import-values:
+      - standard

@@ -1,0 +1,18 @@
+image:
+  name: linuxserver/speedtest-tracker
+  tag: latest
+env:
+  APP_KEY: base64:+wLeujMGYUqcSuAmdfVoXzCeXHAlcnCMScyvN7BGOx8=
+  ADMIN_NAME: "{{ .Values.defaultUser }}"
+  ADMIN_EMAIL: arranstobbs@gmail.com
+  ADMIN_PASSWORD: "{{ .Values.defaultPassword }}"
+  APP_URL: https://speedtest.{{ .Values.domain }}
+  ASSET_URL: https://speedtest.{{ .Values.domain }}
+  SPEEDTEST_SCHEDULE: 0 * * * *
+ports:
+  ClusterIP:
+  - port: 80
+    subdomain: speedtest
+volumes:
+  persisted:
+  - /config

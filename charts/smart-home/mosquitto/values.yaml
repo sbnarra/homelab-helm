@@ -1,0 +1,30 @@
+image:
+  name: library/eclipse-mosquitto
+  tag: 2.0
+releaseNotes: https://github.com/eclipse/mosquitto/releases
+command:
+- mosquitto
+- -c
+- /conf/default.conf
+ports:
+  ClusterIP:
+  - port: 1883
+  LoadBalancer:
+  - port: 1883
+    name: ext
+  # - port: 1883
+  #   name: ext
+  #   protocol: UDP
+volumes:
+  persisted:
+  - /data
+  - /log
+  config:
+  - path: /conf/default.conf
+    content: |
+      listener 1883
+      allow_anonymous true
+      password_file /conf/authentication.pw
+  - path: /conf/authentication.pw
+    content: cfc73e7b-2efa-4c78-ae9a-352662dbc397:$7$101$VlILfXWgmiXGwcsv$zraMAnG/iBsjkBWXij66G29yEODyDYXVr7qoPLL6ODI9XgWXkUeNcpvNJ4IdkLLe26Eyjcb3rKbwbdLeDZf4/Q==
+# 5820e417-1682-4d94-904f-849f81a6b0de

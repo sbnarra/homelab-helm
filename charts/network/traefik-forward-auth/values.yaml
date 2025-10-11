@@ -1,0 +1,16 @@
+image:
+  name: thomseddon/traefik-forward-auth
+  tag: 2-arm64
+env:
+  WHITELIST: arranstobbs@gmail.com
+  COOKIE_DOMAIN: "{{ .Values.domain }}"
+  AUTH_HOST: "auth.{{ .Values.domain }}"
+  LOG_LEVEL: debug
+secretEnv:
+  PROVIDERS_GOOGLE_CLIENT_ID: "{{ .Values.googleClientId }}"
+  PROVIDERS_GOOGLE_CLIENT_SECRET: "{{ .Values.googleClientSecret }}"
+  SECRET: something-random
+ports:
+  ClusterIP:
+  - port: 4181
+    subdomain: auth

@@ -1,0 +1,38 @@
+{{- define "components.servicemonitor" }}
+{{- range $type, $ports := .Values.ports }}
+{{- if ne $type "ServiceMonitor" }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $.Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}
+spec:
+  jobLabel: {{ $.Release.Name }}
+  endpoints:
+  - port: {{ $ }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $.Release.Name }}
+  type: {{ $type }}
+  ports:
+    {{- range $ports }}
+    - name: {{ .name | default "web" }}
+      {{- if .targetPort }}
+      targetPort: {{ .targetPort }}
+      {{ else }}
+      targetPort: {{ .name | default "web" }}
+      {{- end }}
+      protocol: {{ .protocol | default "TCP" }}
+      port: {{ .port }}
+    {{- end }}
+  selector:
+    {{ $.Values.selectorKey | default "app.kubernetes.io/name" }}: {{ $.Values.selectorValue | default $.Release.Name }}
+  {{- if eq $type "LoadBalancer" }}
+  externalIPs:
+{{ .Values.controlPlaneIPs | toYaml | indent 2 }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

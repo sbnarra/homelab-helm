@@ -1,0 +1,27 @@
+{{- define "components.ingress" -}}
+{{- range .Values.proxies }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .name }}-proxy
+  labels:
+    app.kubernetes.io/name: {{ .name }}-proxy
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: network-x-forwarded-https@kubernetescrd,network-traefik-forward-auth@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: {{ .name }}.{{ $.Values.domain }}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .name }}-proxy
+            port:
+              number: {{ .port }}
+{{- end -}}
+{{- end -}}

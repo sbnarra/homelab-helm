@@ -1,0 +1,79 @@
+image:
+  registry: lscr.io
+  name: linuxserver/code-server
+  tag: latest
+env: # https://mods.linuxserver.io/?mod=code-server
+  # DOCKER_MODS: "linuxserver/mods:universal-docker-in-docker"
+  # MODS_DIND_PERSISTENCE: /docker
+  DEFAULT_WORKSPACE: /workspace
+  PROXY_DOMAIN: "vs.{{ .Values.domain }}"
+secretEnv:
+  SUDO_PASSWORD: "{{ .Values.defaultPassword }}"
+  # SUDO_PASSWORD_HASHED: "{{ .Values.defaultPassword }}"
+ports:
+  ClusterIP:
+    - port: 8443
+      subdomain: vs
+    - port: 8000
+      name: test
+      subdomain: vstest
+liveness:
+  port: 8443
+  delay: 180
+  interval: 30
+startup:
+  port: 8443
+  delay: 180
+  interval: 10
+  threshold: 24
+volumes:
+  config:
+  - path: /custom-cont-init.d/01_copy-config
+    content: >-
+      {{ tpl (.Files.Get "configmap/init/01_copy-config.sh") . }}
+  - path: /custom-cont-init.d/02_apt-install
+    content: >-
+      {{ tpl (.Files.Get "configmap/init/02_apt-install.sh") . }}
+  - path: /custom-cont-init.d/03_brew-install
+    content: >-
+      {{ tpl (.Files.Get "configmap/init/03_brew-install.sh") . }}
+  - path: /static/.bashrc
+    content: >-
+      {{ tpl (.Files.Get "configmap/.bashrc") . }}
+  - path: /static/.zshrc
+    content: >-
+      {{ tpl (.Files.Get "configmap/.zshrc") . }}
+  - path: /static/.rc
+    content: >-
+      {{ tpl (.Files.Get "configmap/.rc") . }}
+  - path: /static/Brewfile
+    content: >-
+      {{ tpl (.Files.Get "configmap/Brewfile") . }}
+
+  # service: fix-apt-update
+  - path: /etc/s6-overlay/s6-rc.d/fix-apt-update/run
+    content: |
+      #!/usr/bin/with-contenv bash
+      apt-get update --fix-missing || (sleep 10 && apt-get update --fix-missing)
+    mode: 0755
+  - path: /etc/s6-overlay/s6-rc.d/fix-apt-update/up
+    content: /etc/s6-overlay/s6-rc.d/fix-apt-update/run
+  - path: /etc/s6-overlay/s6-rc.d/fix-apt-update/type
+    content: oneshot
+  - path: /etc/s6-overlay/s6-rc.d/init-mods-package-install/dependencies.d/fix-apt-update
+    content: ""
+
+  secret:
+  - path: /static/.ssh/id_ecdsa
+    content: "{{ .Values.private_key }}"
+    mode: "0600"
+  - path: /static/.ssh/id_ecdsa.pub
+    content: "{{ .Values.public_key }}"
+    mode: "0644"
+  persisted:
+    - /config
+    - /workspace
+    - /modcache
+    # - /docker
+security:
+  privileged: true

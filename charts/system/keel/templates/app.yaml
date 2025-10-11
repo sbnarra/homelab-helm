@@ -1,0 +1,2 @@
+{{ include "components.service" . }}
+{{ include "components.ingress" . }}

@@ -1,0 +1,28 @@
+image:
+  registry: ghcr.io
+  name: ghcr.io/open-webui/open-webui
+  tag: main
+env:
+  WEBUI_NAME: "AI"
+  WEBUI_URL: "https://ai.{{ .Values.domain }}"
+  ENABLE_SIGNUP: "False"
+  OLLAMA_BASE_URL: "http://ollama-internal.ai.svc.cluster.local."
+  DEFAULT_MODELS: "llama3:latest"
+  AUTOMATIC1111_BASE_URL: "http://diffusion-internal.ai.svc.cluster.local."
+  ENABLE_IMAGE_GENERATION: "True"
+  ENABLE_RAG_WEB_SEARCH: "true"
+  RAG_WEB_SEARCH_ENGINE: "searxng"
+  RAG_WEB_SEARCH_RESULT_COUNT: "3"
+  RAG_WEB_SEARCH_CONCURRENT_REQUESTS: "10"
+  SEARXNG_QUERY_URL: "http://ai.searxng:8080/search?q=<query>"
+secretEnv:
+  OPENAI_API_KEY: "{{ .Values.openApiKey }}"
+liveness:
+  port: 8080
+ports:
+  ClusterIP:
+    - port: 8080
+      subdomain: chat
+volumes:
+  persisted:
+    - /app/backend/data

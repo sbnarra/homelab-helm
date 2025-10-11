@@ -1,0 +1,18 @@
+{{- define "annotations.keel" }}
+{{- if not .Values.disableKeel }}
+keel.sh/match-tag: "true"
+keel.sh/approvals: "0"
+keel.sh/policy: "force"
+keel.sh/trigger: "poll"
+keel.sh/pollSchedule: {{ .Values.keelPollSchedule | quote }}
+{{- if .Values.releaseNotes }}
+keel.sh/releaseNotes: {{ .Values.releaseNotes }}
+{{- else if contains "linuxserver/" .Values.image.name }}
+{{- $parts := split "/" .Values.image.name }}
+{{- $githubRepo := printf "%s/docker-%s" ($parts._0) ($parts._1) }}
+keel.sh/releaseNotes: "https://github.com/{{ $githubRepo }}/releases"
+{{- else }}
+keel.sh/releaseNotes: "https://github.com/{{ .Values.image.name }}/releases"
+{{- end }}
+{{- end }}
+{{- end }}

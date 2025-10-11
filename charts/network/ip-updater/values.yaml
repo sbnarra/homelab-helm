@@ -1,0 +1,20 @@
+type: cronjob
+schedule: "* * * * *"
+image:
+  name: library/alpine
+  tag: edge
+command:
+  - /update-cloudflare-dns.sh
+env:
+  DOMAIN: "{{ .Values.domain }}"
+secretEnv:
+  CLOUDFLARE_API_KEY: "{{ .Values.cloudFlareApiKey }}"
+  CLOUDFLARE_EMAIL: "{{ .Values.cloudFlareEmail }}"
+volumes:
+  config:
+  - path: /update-cloudflare-dns.sh
+    mode: "0777"
+    content: |
+      {{ tpl (.Files.Get "configmap/update-cloudflare-dns.sh") . }}
+  persisted:
+  - /ip

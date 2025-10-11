@@ -1,0 +1,9 @@
+apiVersion: v2
+name: traefik
+version: 0.0.1
+icon: https://helm.sh/img/helm.svg
+
+dependencies:
+  - name: traefik
+    version: "^28"
+    repository: "@traefik"

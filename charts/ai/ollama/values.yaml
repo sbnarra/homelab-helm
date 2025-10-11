@@ -1,0 +1,18 @@
+image:
+  name: ollama/ollama
+  tag: latest
+env:
+  OLLAMA_HOST: 0.0.0.0:80
+  OLLAMA_MODELS: /models
+
+# keel is disabled as we're loading different images into different nodes based on hw
+# server original image, pc will use custom rocm image
+disableKeel: true
+liveness:
+  port: 80
+ports:
+  ClusterIP:
+  - port: 80
+volumes:
+  persisted:
+  - /models

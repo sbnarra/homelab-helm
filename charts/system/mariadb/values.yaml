@@ -1,0 +1,14 @@
+image:
+  name: linuxserver/mariadb
+  tag: latest
+env:
+  MYSQL_ROOT_PASSWORD: "{{ .Values.defaultPassword }}"
+  MYSQL_DATABASE: nextcloud
+  MYSQL_USER: "{{ .Values.defaultUser }}"
+  MYSQL_PASSWORD: "{{ .Values.defaultPassword }}"
+ports:
+  ClusterIP:
+  - port: 3306
+volumes:
+  persisted:
+  - /config
