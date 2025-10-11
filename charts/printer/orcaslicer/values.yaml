@@ -17,3 +17,10 @@ volumes:
       config/exports: /config/freecad
 gpu:
   enabled: true
+affinity:
+  required: true
+  labels:
+    kubernetes.io/arch:
+    - amd64
+    kubernetes.io/hostname:
+    - rx4-node

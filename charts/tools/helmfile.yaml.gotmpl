@@ -14,24 +14,24 @@ releases:
   inherit:
   - template: requiresPersistence
 
-- name: webtop
-  inherit:
-  - template: requiresPersistence
+# - name: webtop
+#   inherit:
+#   - template: requiresPersistence
 
 - name: chromium
   inherit:
   - template: requiresPersistence
 
-- name: collabora
-  inherit:
-  - template: requiresNothing
-  values:
-  - replicas: 0
+# - name: collabora
+#   inherit:
+#   - template: requiresNothing
+#   values:
+#   - replicas: 0
 
-- name: nextcloud
-  inherit:
-  - template: requiresPersistence
-  needs:
-  - collabora
-  values:
-  - replicas: 0
+# - name: nextcloud
+#   inherit:
+#   - template: requiresPersistence
+#   needs:
+#   - collabora
+#   values:
+#   - replicas: 0

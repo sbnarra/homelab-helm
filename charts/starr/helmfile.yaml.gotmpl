@@ -7,8 +7,8 @@ releases:
   - template: persistenceStorage
 - inherit:
   - template: mediaStorage
-- inherit:
-  - template: testMediaStorage
+# - inherit:
+#   - template: testMediaStorage
 
 - name: flaresolverr
   inherit:
@@ -34,19 +34,19 @@ releases:
   needs:
   - prowlarr
 
-- name: lidarr
-  inherit:
-  - template: requiresMedia
-  needs:
-  - prowlarr
-  values:
-  - replicas: 0
+# - name: lidarr
+#   inherit:
+#   - template: requiresMedia
+#   needs:
+#   - prowlarr
+#   values:
+#   - replicas: 0
 
-- name: readarr
-  inherit:
-  - template: requiresMedia
-  needs:
-  - prowlarr
+# - name: readarr
+#   inherit:
+#   - template: requiresMedia
+#   needs:
+#   - prowlarr
 
 - name: sonarr
   inherit:

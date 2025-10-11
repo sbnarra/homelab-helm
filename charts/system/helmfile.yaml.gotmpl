@@ -68,7 +68,7 @@ releases:
   values:
   - unclaimed: true
     nfs:
-      path: {{ .Values.persistencePath }}/{{ .Values.namespace }}/prometheus/prometheus
+      path: {{ .Values.persistencePath }}/{{ .Values.namespace }}/prometheus
 
 - name: prometheus
   inherit:
@@ -92,6 +92,6 @@ releases:
           subPath: loki/data
           existingClaim: persistence-{{ .Values.namespace }}
 
-- name: mariadb
-  inherit:
-  - template: requiresPersistence
+# - name: mariadb
+#   inherit:
+#   - template: requiresPersistence

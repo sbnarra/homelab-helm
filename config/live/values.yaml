@@ -24,12 +24,12 @@ namespace_persistence:
     - "{{ .Values.machine_ips.rx4 }}"
     - "{{ .Values.machine_ips.rp4 }}"
   tools:
-    source: "{{ .Values.machine_ips.r5c }}"
+    source: "{{ .Values.machine_ips.op5 }}"
     backups:
     - "{{ .Values.machine_ips.rx4 }}"
     - "{{ .Values.machine_ips.rp4 }}"  
   ai:
-    source: "{{ .Values.machine_ips.r5c }}"
+    source: "{{ .Values.machine_ips.op5 }}"
     backups:
     - "{{ .Values.machine_ips.rx4 }}"
     - "{{ .Values.machine_ips.rp4 }}"
@@ -44,7 +44,7 @@ namespace_persistence:
     - "{{ .Values.machine_ips.r5c }}"
     - "{{ .Values.machine_ips.rp4 }}"
   printer:
-    source: "{{ .Values.machine_ips.rx4 }}"
+    source: "{{ .Values.machine_ips.op5 }}"
     backups:
     - "{{ .Values.machine_ips.r5c }}"
     - "{{ .Values.machine_ips.rp4 }}"

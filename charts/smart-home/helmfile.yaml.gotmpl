@@ -10,19 +10,19 @@ releases:
 - inherit:
   - template: persistenceStorage
 
-- name: openthread-border-router
-  inherit:
-  - template: requiresNothing
-  labels:
-    dependsOn: usbs
-  values:
-  - replicas: 0
+# - name: openthread-border-router
+#   inherit:
+#   - template: requiresNothing
+#   labels:
+#     dependsOn: usbs
+#   values:
+#   - replicas: 0
 
-- name: homebridge
-  inherit:
-  - template: requiresPersistence
-  values:
-  - replicas: 0
+# - name: homebridge
+#   inherit:
+#   - template: requiresPersistence
+#   values:
+#   - replicas: 0
 
 # - name: scrypted
 #   inherit:
@@ -34,17 +34,17 @@ releases:
   values:
   - replicas: 0
 
-- name: piper
-  inherit:
-  - template: requiresPersistence
-  values:
-  - replicas: 0
+# - name: piper
+#   inherit:
+#   - template: requiresPersistence
+#   values:
+#   - replicas: 0
 
-- name: whisper
-  inherit:
-  - template: requiresPersistence
-  values:
-  - replicas: 0
+# - name: whisper
+#   inherit:
+#   - template: requiresPersistence
+#   values:
+#   - replicas: 0
 
 - name: mosquitto
   inherit:
@@ -63,10 +63,10 @@ releases:
   - template: requiresPersistence
   needs:
   - mosquitto
-  - whisper
-  - piper
+#   - whisper
+#   - piper
   - matter
-  - openthread-border-router
+#   - openthread-border-router
 
 - name: nodered
   inherit:

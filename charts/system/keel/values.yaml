@@ -12,6 +12,16 @@ keel:
     botName: keel
     channel: keel-updates
     approvalsChannel: keel-updates
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/arch
+            operator: In
+            values:
+            - amd64
+
 
 # composer
 selectorKey: app
