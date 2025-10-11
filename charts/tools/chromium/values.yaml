@@ -3,8 +3,13 @@ image:
   tag: latest
 env:
   DISABLE_IPV6: true
-liveness:
-  port: 3000
+probes:
+  liveness:
+    enabled: true
+    port: 3000
+  startup:
+    enabled: true
+    port: 3000
 ports:
   ClusterIP:
     - port: 3000

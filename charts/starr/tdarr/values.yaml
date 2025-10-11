@@ -5,8 +5,13 @@ image:
 keelPollSchedule: "@every 1m"
 security:
   privileged: true
-liveness:
-  port: 8265
+probes:
+  liveness:
+    enabled: true
+    port: 8265
+  startup:
+    enabled: true
+    port: 8265
 env:
   serverIP: 0.0.0.0
   serverPort: 8266

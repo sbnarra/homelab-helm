@@ -17,15 +17,18 @@ ports:
     - port: 8000
       name: test
       subdomain: vstest
-liveness:
-  port: 8443
-  delay: 180
-  interval: 30
-startup:
-  port: 8443
-  delay: 180
-  interval: 10
-  threshold: 24
+probes:
+  liveness:
+    enabled: true
+    port: 8443
+    delay: 180
+    interval: 30
+  startup:
+    enabled: true
+    port: 8443
+    delay: 180
+    interval: 10
+    threshold: 24
 volumes:
   config:
   - path: /custom-cont-init.d/01_copy-config

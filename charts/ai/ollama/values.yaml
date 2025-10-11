@@ -8,8 +8,13 @@ env:
 # keel is disabled as we're loading different images into different nodes based on hw
 # server original image, pc will use custom rocm image
 disableKeel: true
-liveness:
-  port: 80
+probes:
+  liveness:
+    enabled: true
+    port: 80
+  startup:
+    enabled: true
+    port: 80
 ports:
   ClusterIP:
   - port: 80

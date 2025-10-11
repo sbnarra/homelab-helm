@@ -65,39 +65,39 @@ containers:
     seccompProfile:
       type: {{ .Values.security.seccomp }}
     {{- end }}
-  {{- if .Values.liveness }}
+  {{- if .Values.probes.liveness.enabled }}
   livenessProbe:
     httpGet:
-      path: {{ .Values.liveness.path | default "/" }}
-      port: {{ .Values.liveness.port | default "web" }}
-      {{- if .Values.liveness.headers }}
+      path: {{ .Values.probes.liveness.path }}
+      port: {{ .Values.probes.liveness.port }}
+      {{- if .Values.probes.liveness.headers }}
       httpHeaders:
-      {{- range .Values.liveness.headers }}
+      {{- range .Values.probes.liveness.headers }}
       - name: {{ tpl .name $ }}
         value: {{ tpl .value $ }}
       {{- end }}
       {{- end }}
-    initialDelaySeconds: {{ .Values.liveness.delay | default "10" }}
-    periodSeconds: {{ .Values.liveness.interval | default "30" }}
-    timeoutSeconds: {{ .Values.liveness.timeout | default "15" }}
-    failureThreshold: {{ .Values.liveness.threshold | default "4" }}
+    initialDelaySeconds: {{ .Values.probes.liveness.delay }}
+    periodSeconds: {{ .Values.probes.liveness.interval }}
+    timeoutSeconds: {{ .Values.probes.liveness.timeout }}
+    failureThreshold: {{ .Values.probes.liveness.threshold }}
   {{- end }}
-  {{- if and .Values.liveness (not .Values.liveness.noStartupProbe) }}
+  {{- if and .Values.probes.startup.enabled }}
   startupProbe:
     httpGet:
-      path: {{ .Values.startup.path | default .Values.liveness.path | default "/" }}
-      port: {{ .Values.startup.port | default .Values.liveness.port | default "web" }}
-      {{- if .Values.startup.headers | default .Values.liveness.headers }}
+      path: {{ .Values.probes.startup.path }}
+      port: {{ .Values.probes.startup.port }}
+      {{- if .Values.probes.startup.headers }}
       httpHeaders:
-      {{- range .Values.startup.headers | default .Values.liveness.headers }}
+      {{- range .Values.probes.startup.headers }}
       - name: {{ tpl .name $ }}
         value: {{ tpl .value $ }}
       {{- end }}
       {{- end }}
-    initialDelaySeconds: {{ .Values.startup.delay | default .Values.liveness.delay | default "10" }}
-    periodSeconds: {{ .Values.startup.interval | default .Values.liveness.interval | default "10" }}
-    timeoutSeconds: {{ .Values.startup.timeout | default .Values.liveness.timeout | default "10" }}
-    failureThreshold: {{ .Values.startup.threshold | default .Values.liveness.threshold | default "8" }}
+    initialDelaySeconds: {{ .Values.probes.startup.delay }}
+    periodSeconds: {{ .Values.probes.startup.interval }}
+    timeoutSeconds: {{ .Values.probes.startup.timeout }}
+    failureThreshold: {{ .Values.probes.startup.threshold }}
   {{- end }}
   env:
   - name: NODENAME

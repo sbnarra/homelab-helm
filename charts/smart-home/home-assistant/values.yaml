@@ -7,8 +7,17 @@ dnsPolicy: ClusterFirstWithHostNet
 deploymentStrategy: Recreate
 env:
   DOCKER_MODS: linuxserver/mods:homeassistant-hacs
-liveness:
-  port: 8123
+probes:
+  liveness:
+    enabled: false
+    port: 8123
+    delay: 60
+    threshold: 8
+  startup:
+    enabled: false
+    port: 8123
+    delay: 240
+    threshold: 8
 ports:
   ClusterIP:
   - port: 8123

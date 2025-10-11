@@ -2,8 +2,13 @@ image:
   registry: lscr.io
   name: linuxserver/bazarr
   tag: latest
-liveness:
-  port: 6767
+probes:
+  liveness:
+    enabled: true
+    port: 6767
+  startup:
+    enabled: true
+    port: 6767
 ports:
   ClusterIP:
     - port: 6767

@@ -17,8 +17,13 @@ env:
   SEARXNG_QUERY_URL: "http://ai.searxng:8080/search?q=<query>"
 secretEnv:
   OPENAI_API_KEY: "{{ .Values.openApiKey }}"
-liveness:
-  port: 8080
+probes:
+  liveness:
+    enabled: true
+    port: 8080
+  startup:
+    enabled: true
+    port: 8080
 ports:
   ClusterIP:
     - port: 8080

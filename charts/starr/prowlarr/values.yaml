@@ -2,7 +2,13 @@ image:
   registry: lscr.io
   name: linuxserver/prowlarr
   tag: latest
-liveness:
+probes:
+  liveness:
+    enabled: true
+  port: 9696
+  path: /ping
+  startup:
+    enabled: true
   port: 9696
   path: /ping
 ndots: 2

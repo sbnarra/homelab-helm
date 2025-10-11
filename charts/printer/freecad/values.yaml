@@ -2,8 +2,13 @@ image:
   registry: lscr.io
   name: linuxserver/freecad
   tag: latest
-liveness:
-  port: 3000
+probes:
+  liveness:
+    enabled: true
+    port: 3000
+  startup:
+    enabled: true
+    port: 3000
 ports:
   ClusterIP:
   - port: 3000

@@ -6,8 +6,13 @@ env:
 #   INSTANCE_NAME: "searxng"
   BASE_URL: "https://searxng.{{ .Values.domain }}"
   AUTOCOMPLETE: "true"
-liveness:
-  port: 8080
+probes:
+  liveness:
+    enabled: true
+    port: 8080
+  startup:
+    enabled: true
+    port: 8080
 ports:
   ClusterIP:
   - port: 8080

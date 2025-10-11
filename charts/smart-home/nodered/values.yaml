@@ -2,8 +2,13 @@ image:
   name: nodered/node-red
   tag: latest
 releaseNotes: https://github.com/node-red/node-red/releases
-liveness:
-  port: 1880
+probes:
+  liveness:
+    enabled: true
+    port: 1880
+  startup:
+    enabled: true
+    port: 1880
 ports:
   ClusterIP:
     - port: 1880

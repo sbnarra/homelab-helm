@@ -14,20 +14,25 @@ exports:
       docker.io: 5000
       ghcr.io: 5001
       lscr.io: 5002
-    # liveness:
-    #   path: /
-    #   port: 80
-    #   delay: 2
-    #   interval: 10
-    #   timeout: 5
-    #   threshold: 3
-    startup: {}
-    #   path: /
-    #   port: 80
-    #   delay: 2
-    #   interval: 10
-    #   timeout: 5
-    #   threshold: 3
+    probes:
+      liveness:
+        enabled: false
+        path: /
+        port: web
+        delay: 10
+        interval: 30
+        timeout: 15
+        threshold: 4
+        headers: {}
+      startup:
+        enabled: false
+        path: /
+        port: web
+        delay: 10
+        interval: 10
+        timeout: 10
+        threshold: 8
+        headers: {}
     replicas: 1
     hostNetwork: false
     hostIPC: false # TODO: remove this, only used by ollama old gpu.yaml

@@ -2,9 +2,15 @@ image:
   registry: lscr.io
   name: linuxserver/radarr
   tag: latest
-# liveness:
-#   port: 7878
-#   path: /ping
+probes:
+  liveness:
+    enabled: false
+    port: 7878
+    path: /ping
+  startup:
+    enabled: false
+    port: 7878
+    path: /ping
 ndots: 2
 ports:
   ClusterIP:

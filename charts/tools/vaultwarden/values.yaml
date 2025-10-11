@@ -10,8 +10,13 @@ env:
   SHOW_PASSWORD_HINT: "false"
   ADMIN_TOKEN : "$argon2id$v=19$m=65540,t=3,p=4$wnU36ry/HiacLyFjTUDd/y8yBvDK/0f80LRMkJqdzAY$EPNMW78FVfkUwNvkWr0ijiKEOL1whNaS9E1y8mcwHxM"
   DOMAIN : "https://vault.{{ .Values.domain }}"
-liveness:
-  port: 80
+probes:
+  liveness:
+    enabled: true
+    port: 80
+  startup:
+    enabled: true
+    port: 80
 ports:
   ClusterIP:
     - port: 80
