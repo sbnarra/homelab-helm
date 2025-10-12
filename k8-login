@@ -11,7 +11,7 @@ trap error_handler ERR
 
 remote_ip=$([ "$1" == "live" ] && \
     echo "192.168.1.11" || \
-    echo "192.168.1.111"))
+    echo "192.168.1.111")
 
 ssh_cmd="ssh -q lab@$remote_ip"
 remote_hostname=$($ssh_cmd "hostname")
