@@ -1,0 +1,27 @@
+type: cronjob
+schedule: "30 4 * * *"
+ttlSecondsAfterFinished: 86400
+serviceAccountName: backup
+image:
+  name: library/debian
+  tag: trixie-slim
+command:
+- /backup.sh
+volumes:
+  config:
+  - path: /backup.sh
+    mode: "0700"
+    content: |
+      {{ tpl (.Files.Get "configmap/backup.sh") . }}
+  - path: /backup.py
+    mode: "0700"
+    content: |
+      {{ tpl (.Files.Get "configmap/backup.py") . }}
+  secret:
+  - path: /id_ed25519
+    content: "{{ .Values.private_key | b64dec }}"
+    mode: "0600"
+# initContainers:
+#   name: packages
+#   image: library/debian:trixie-slim
+#   volume

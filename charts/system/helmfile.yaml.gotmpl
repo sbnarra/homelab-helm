@@ -14,35 +14,9 @@ releases:
 - inherit:
   - template: persistenceStorage
 
-# - name: nas-persistence
-#   inherit:
-#   - template: storage
-#   values:
-#   - nfs:
-#       path: {{ .Values.persistencePath }}
-
-# - name: nas-backups
-#   inherit:
-#   - template: storage
-#   values:
-#   - nfs:
-#       path: /lab/data/backups
-
-# - name: pi-backups
-#   inherit:
-#   - template: storage
-#   values:
-#   - nfs:
-#       server: { { .Values.piIP }}
-#       path: /lab/data/backups
-
-# - name: backups
-#   inherit:
-#   - template: requiresNothing
-#   needs:
-#   - nas-persistence
-#   - nas-backups
-#   - pi-backups
+- name: backup
+  inherit:
+  - template: requiresNothing
 
 - name: startpage
   inherit:

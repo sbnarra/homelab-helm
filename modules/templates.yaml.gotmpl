@@ -9,6 +9,7 @@ templates:
     - "../../config/{{ .Environment.Name }}/values.yaml"
     secrets:
     - "../../config/{{ .Environment.Name }}/secrets.sops.yaml"
+    - "../../config/{{ .Environment.Name }}/keys.sops.yaml"
 
   requiresPersistence:
     inherit:

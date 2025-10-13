@@ -5,9 +5,6 @@ loadBalancerIP: 192.168.1.11
 controlPlaneIPs:
 - 192.168.1.11
 
-zigbeeHost: node-nas-default-a1
-threadHost: node-nas-default-a1
-
 persistencePath: /lab/persistence
 
 machine_ips:

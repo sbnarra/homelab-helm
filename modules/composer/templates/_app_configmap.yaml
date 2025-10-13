@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+  name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
   labels:
     app.kubernetes.io/name: {{ $.Release.Name }}
 type: Opaque

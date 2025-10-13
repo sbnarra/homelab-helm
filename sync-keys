@@ -1,0 +1,9 @@
+
+
+cat <<EOF | tee /tmp/keys.yaml
+private_key: "$(sops decrypt ../homelab-machines/ansible/roles/ssh/files/id_ed25519.sops | base64 -w 0)"
+public_key: "$(sops decrypt ../homelab-machines/ansible/roles/ssh/files/id_ed25519.sops.pub | base64 -w 0)"
+EOF
+
+sops encrypt /tmp/keys.yaml >config/live/keys.sops.yaml
+rm /tmp/keys.yaml

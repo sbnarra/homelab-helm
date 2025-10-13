@@ -31,6 +31,10 @@ dnsConfig:
     {{- end }}
   {{- end }}
 
+{{- if .Values.serviceAccountName }}
+serviceAccountName: {{ .Values.serviceAccountName }}
+{{- end }}
+
 containers:
 - name: {{ .Release.Name }}
   {{- if .Values.registryPortOverrides.enabled }}
@@ -180,9 +184,9 @@ volumes:
     type: {{ $host.type }}
 {{- end }}
 {{- range .Values.volumes.config }}
-- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
   configMap:
-    name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+    name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
     defaultMode: {{ .mode | default "0644" }}
 {{- end }}
 {{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
@@ -192,9 +196,9 @@ volumes:
     defaultMode: 0644
 {{- end }}
 {{- range .Values.volumes.secret }}
-- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
   secret:
-    secretName: {{ $.Release.Name }}-vol-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+    secretName: {{ $.Release.Name }}-vol-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
     defaultMode: {{ .mode | default "0644" }}
 {{- end }}
 {{- if .Values.volumes.persisted }}
@@ -220,7 +224,7 @@ volumes:
     subPath: {{ $.Release.Name }}{{ . }}
   {{- end }}
   {{- range .Values.volumes.secret }}
-  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
     mountPath: {{ .path }}
     subPath: {{ base .path }}
   {{- end }}
@@ -230,7 +234,7 @@ volumes:
     subPath: 00_gpu-render-group
   {{- end }}
   {{- range .Values.volumes.config }}
-  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s" $.Release.Name .path (.content | toYaml)) $) | sha1sum }}
+  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
     mountPath: {{ .path }}
     subPath: {{ base .path }}
   {{- end }}
