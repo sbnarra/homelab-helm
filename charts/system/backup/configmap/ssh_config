@@ -1,0 +1,6 @@
+Host 192.168.1.*
+    User lab
+    ForwardAgent yes
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    IdentityFile ~/.ssh/id_ed25519

@@ -10,5 +10,6 @@ sleep 2
 kubectl get po -n system
 
 sleep 3
+
 pod=$(kubectl get po --no-headers -n system | awk '{print $1}' | grep backup-test)
 kubectl logs -f $pod -n system

@@ -3,25 +3,28 @@ schedule: "30 4 * * *"
 ttlSecondsAfterFinished: 86400
 serviceAccountName: backup
 image:
-  name: library/debian
-  tag: trixie-slim
+  name: library/alpine
+  tag: latest
 command:
-- /backup.sh
+- sh
+- -c
+- apk add --no-cache python3 openssh-client kubectl && python3 /backup.py
+env:
+  PYTHONUNBUFFERED: 1
+  CONCURRENCY_NAMESPACE: 1
+  CONCURRENCY_DEPLOYMENT: 1
+  NO_DRY_RUN: 0
 volumes:
   config:
-  - path: /backup.sh
-    mode: "0700"
-    content: |
-      {{ tpl (.Files.Get "configmap/backup.sh") . }}
   - path: /backup.py
     mode: "0700"
     content: |
       {{ tpl (.Files.Get "configmap/backup.py") . }}
+  - path: /root/.ssh/config
+    mode: "0644"
+    content: |
+      {{ tpl (.Files.Get "configmap/ssh_config") . }}
   secret:
-  - path: /id_ed25519
+  - path: /root/.ssh/id_ed25519
     content: "{{ .Values.private_key | b64dec }}"
     mode: "0600"
-# initContainers:
-#   name: packages
-#   image: library/debian:trixie-slim
-#   volume
