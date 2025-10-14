@@ -11,15 +11,32 @@ command:
 - apk add --no-cache python3 openssh-client kubectl && python3 /backup.py
 env:
   PYTHONUNBUFFERED: 1
-  CONCURRENCY_NAMESPACE: 1
-  CONCURRENCY_DEPLOYMENT: 1
-  NO_DRY_RUN: 0
+  CONCURRENCY_NAMESPACE: 10
+  CONCURRENCY_DEPLOYMENT: 2
+  SCALE_UP_TIMEOUT: 30
+  SCALE_DOWN_TIMEOUT: 30
+  EXCLUDE_NAMESPACES: default,kube-flannel,kube-node-lease,kube-public,kube-system,starr
+  INCLUDE_NAMESPACES: ai,printer,network,smart-home,media
+  NO_DRY_RUN: 1
 volumes:
   config:
   - path: /backup.py
     mode: "0700"
     content: |
       {{ tpl (.Files.Get "configmap/backup.py") . }}
+  - path: /k8.py
+    mode: "0700"
+    content: |
+      {{ tpl (.Files.Get "configmap/k8.py") . }}
+  - path: /run.py
+    mode: "0700"
+    content: |
+      {{ tpl (.Files.Get "configmap/run.py") . }}
+  - path: /context.py
+    mode: "0700"
+    content: |
+      {{ tpl (.Files.Get "configmap/context.py") . }}
+
   - path: /root/.ssh/config
     mode: "0644"
     content: |
