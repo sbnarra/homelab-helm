@@ -14,7 +14,7 @@ class Context:
         return f"[{ts}][{name}] {self.node}/{self.namespace}/{self.deployment}"
 
     def throw(self, msg):
-        raise Exception(f"{ctx} {msg}")
+        raise Exception(f"{self} {msg}")
 
     def info(self, msg):
         self.log("INFO", msg)

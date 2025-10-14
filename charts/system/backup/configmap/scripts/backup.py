@@ -54,24 +54,23 @@ def backup_namespace(node, namespace, executor):
 def backup_deployment(ctx):
 
     primary_nodes = [R5C, OP5]
-    # TODO: must be 2 nodes... when primary = node, use other to allow offline backup
-    # if only 1: when node same as primary,
-    #   unable to run secondary without corrupt data risk as using live data
-    # if more than 2: will always end up with one node missing
+    # primary_nodes = k8.get_nodes_by_label("backup/role", "primary")
 
-    # TODO: move get_nodes_by_label higher to only call once at start, 
-    # maybe object for all this being passed around
-    # primary_nodes = get_nodes_by_label("backup/role", "primary")
-    primary_node = next((primary_node for primary_node in primary_nodes if primary_node != ctx.node), None)
+    potential_primary_nodes = [primary_node for primary_node in primary_nodes if primary_node != ctx.node]
+    primary_node = potential_primary_nodes[0] if potential_primary_nodes else None
     if not primary_node:
-        ctx.throw("unable to backup, no primary backup node")
+        ctx.throw(f"unable to backup, no primary backup node: node={ctx.node}potential_primary_nodes={potential_primary_nodes}")
+
+    secondary_nodes = [] # [RX4, RP4]
+    # secondary_nodes = k8.get_nodes_by_label("backup/role", "secondary")
+
+    non_primary_nodes = [node for node in potential_primary_nodes if node != primary_node]
+    secondary_nodes.extend(non_primary_nodes)
 
     replicas = k8.scale_down(ctx)
     try: data.sync(ctx, ctx.node, primary_node)
     finally: k8.scale_up(ctx, replicas)
-
-    secondary_nodes = [] # [RX4, RP4]
-    # secondary_nodes = get_nodes_by_label("backup/role", "secondary")
+ 
     for secondary_node in secondary_nodes:
         if primary_node != secondary_node:
             try: data.sync(ctx, primary_node, secondary_node)

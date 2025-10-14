@@ -15,11 +15,12 @@ env:
   CONCURRENCY_NAMESPACE: 10
   CONCURRENCY_DEPLOYMENT: 2
 
-  SCALE_UP_TIMEOUT: 30
   SCALE_DOWN_TIMEOUT: 30
+  SCALE_UP_TIMEOUT: 600 # this is high to allow time for vscode to come back up 
   
-  EXCLUDE_NAMESPACES: default,kube-flannel,kube-node-lease,kube-public,kube-system,starr
-  INCLUDE_NAMESPACES: ai,printer,network,smart-home,media,system,starr # tools
+  EXCLUDE_NAMESPACES: default,kube-flannel,kube-node-lease,kube-public,kube-system
+  # INCLUDE_NAMESPACES: ai,printer,network,smart-home,media,system,starr # tools
+  # INCLUDE_NAMESPACES: media
   
   NO_DRY_RUN: 1
 volumes:

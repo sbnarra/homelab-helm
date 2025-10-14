@@ -9,5 +9,5 @@ def sync(ctx, src_node, target_node):
     rsync = 'rsync -avz --delete --rsync-path=\\"sudo rsync\\"'
     rsync_ssh = '-e \\"ssh -F /home/lab/.ssh/config\\"'
 
-    ctx.info(f"backing up to {target_node}")
+    ctx.info(f"backing {src_node} -> {target_node}")
     exec.dry(f'ssh -A {src_node} "sudo {rsync} {rsync_ssh} {src} lab@{dst}"')

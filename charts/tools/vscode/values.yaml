@@ -26,7 +26,7 @@ probes:
   startup:
     enabled: true
     port: 8443
-    delay: 180
+    delay: 300 # ansible install takes long time 
     interval: 10
     threshold: 24
 volumes:
