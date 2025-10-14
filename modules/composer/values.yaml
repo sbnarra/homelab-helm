@@ -71,7 +71,7 @@ exports:
         #    mode: "0700"
       config: []
         # - path: /etc/service.rc
-        #   content: someconfigcontents
+        #   content: someconfigcontents OR dir: configmap
         #   mode: "0700"
       host: []
         # - hostPath: /hostPath

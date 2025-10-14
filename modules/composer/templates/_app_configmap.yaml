@@ -1,16 +1,26 @@
 {{- define "components.configmap" -}}
-{{- range .Values.volumes.config }}
+{{- range $conf := .Values.volumes.config }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
+  {{- if $conf.dir }}
+  name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name $conf.dir ($.Files.Glob (printf "%s/**" .dir)) $conf.mode) $) | sha1sum }}
+  {{- else }}
+  name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name $conf.path ($conf.content | toYaml) $conf.mode) $) | sha1sum }}
+  {{- end }}
   labels:
     app.kubernetes.io/name: {{ $.Release.Name }}
 type: Opaque
 immutable: true
 data:
-  {{ base .path }}: |{{ tpl .content $ | nindent 4 }}
+  {{- if $conf.content }}
+  {{ base .path }}: |{{ tpl $conf.content $ | nindent 4 }}
+  {{- else if $conf.dir }}
+  {{- range $file, $content := $.Files.Glob (printf "%s/**" .dir) }}
+  {{ $file | trimPrefix (printf "%s/" $conf.dir) }}: |{{ $content | toString | nindent 4 }}
+  {{- end }}
+  {{- end }}
 {{- end }}
 {{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
 ---

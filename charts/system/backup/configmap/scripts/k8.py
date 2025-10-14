@@ -4,7 +4,7 @@ import env
 
 def scale_up(ctx, replicas):
     if replicas == 0: return
-    _set_deployment_replicas(ctx, replicas)
+    _set_deployment_replicas(ctx, 0, replicas)
     if env.no_dry_run:
         try: _wait_deployment_replicas(ctx, replicas, env.scale_up_timeout)
         except Exception as e:
@@ -13,15 +13,14 @@ def scale_up(ctx, replicas):
 
 def scale_down(ctx):
     replicas = _get_deployment_replicas(ctx)
-    ctx.info(f"has {replicas} replicas")
     if replicas == 0: return 0
 
-    _set_deployment_replicas(ctx, 0)
+    _set_deployment_replicas(ctx, replicas, 0)
     if not env.no_dry_run: return replicas
 
     try: _wait_deployment_replicas(ctx, 0, env.scale_down_timeout)
     except Exception: 
-        _set_deployment_replicas(ctx, replicas)
+        _set_deployment_replicas(ctx, 0, replicas)
         raise
     return replicas
 
@@ -44,9 +43,9 @@ def _get_deployment_replicas(ctx):
     result = exec.out(f"kubectl get deployment -l app.kubernetes.io/name={ctx.deployment} -n {ctx.namespace} -o custom-columns=REPLICAS:.status.replicas --no-headers").strip()
     return int(result) if result and result.isdigit() else 0
 
-def _set_deployment_replicas(ctx, replicas):
-    ctx.info(f"setting replicas to {replicas}")
-    exec.dry(f"kubectl scale deployment {ctx.deployment} -n {ctx.namespace} --replicas={replicas}")
+def _set_deployment_replicas(ctx, current_replicas, target_replicas):
+    ctx.info(f"setting replicas {current_replicas} -> {target_replicas}")
+    exec.dry(f"kubectl scale deployment {ctx.deployment} -n {ctx.namespace} --replicas={target_replicas}")
 
 def _get_deployment_pods_ready(ctx):
     result = exec.out(f"kubectl get deployment {ctx.deployment} -n {ctx.namespace} {_jsonpath(".status.readyReplicas")}").strip()

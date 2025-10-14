@@ -13,8 +13,8 @@ def main():
     
     print(f"NO_DRY_RUN={env.no_dry_run},CONCURRENCY_NAMESPACE={env.namespace_concurrency},CONCURRENCY_DEPLOYMENT={env.deployment_concurrency}")
 
-    with ThreadPoolExecutor(max_workers=env.namespace_concurrency) as namespaceExecutor:
-        with ThreadPoolExecutor(max_workers=env.deployment_concurrency, thread_name_prefix="backup") as deploymentExecutor:
+    with ThreadPoolExecutor(max_workers=env.namespace_concurrency, thread_name_prefix="ns") as namespaceExecutor:
+        with ThreadPoolExecutor(max_workers=env.deployment_concurrency, thread_name_prefix="thread") as deploymentExecutor:
             backup_cluster(namespaceExecutor, deploymentExecutor)
 
 def backup_cluster(namespaceExecutor, deploymentExecutor):
@@ -52,7 +52,6 @@ def backup_namespace(node, namespace, executor):
         raise Exception()
 
 def backup_deployment(ctx):
-    replicas = k8.scale_down(ctx)
 
     primary_nodes = [R5C, OP5]
     # TODO: must be 2 nodes... when primary = node, use other to allow offline backup
@@ -67,6 +66,7 @@ def backup_deployment(ctx):
     if not primary_node:
         ctx.throw("unable to backup, no primary backup node")
 
+    replicas = k8.scale_down(ctx)
     try: data.sync(ctx, ctx.node, primary_node)
     finally: k8.scale_up(ctx, replicas)
 
@@ -74,7 +74,10 @@ def backup_deployment(ctx):
     # secondary_nodes = get_nodes_by_label("backup/role", "secondary")
     for secondary_node in secondary_nodes:
         if primary_node != secondary_node:
-            data.sync(ctx, primary_node, secondary_node)
+            try: data.sync(ctx, primary_node, secondary_node)
+            except Exception as e:
+                ctx.error(f"secondary backup failed {primary_node} -> {secondary_node}: {e}", e)
+                pass
 
 if __name__ == "__main__":
     main()

@@ -183,11 +183,19 @@ volumes:
     path: {{ $host.hostPath }}
     type: {{ $host.type }}
 {{- end }}
-{{- range .Values.volumes.config }}
-- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
+{{- range $conf := .Values.volumes.config }}
+{{- if $conf.dir }}
+- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name $conf.dir ($.Files.Glob (printf "%s/**" .dir)) $conf.mode) $) | sha1sum }}
+{{- else }}
+- name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name $conf.path ($conf.content | toYaml) $conf.mode) $) | sha1sum }}
+{{- end }}
   configMap:
-    name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
-    defaultMode: {{ .mode | default "0644" }}
+{{- if $conf.dir }}
+    name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name $conf.dir ($.Files.Glob (printf "%s/**" .dir)) $conf.mode) $) | sha1sum }}
+{{- else }}
+    name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name $conf.path ($conf.content | toYaml) $conf.mode) $) | sha1sum }}
+{{- end }}
+    defaultMode: {{ $conf.mode | default "0644" }}
 {{- end }}
 {{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
 - name: {{ $.Release.Name }}-linuxserver-gpu
@@ -233,10 +241,16 @@ volumes:
     mountPath: /custom-cont-init.d/00_gpu-render-group
     subPath: 00_gpu-render-group
   {{- end }}
-  {{- range .Values.volumes.config }}
-  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name .path (.content | toYaml) .mode) $) | sha1sum }}
-    mountPath: {{ .path }}
-    subPath: {{ base .path }}
+  {{- range $conf := .Values.volumes.config }}
+{{- if $conf.dir }}
+  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name $conf.dir ($.Files.Glob (printf "%s/**" .dir)) $conf.mode) $) | sha1sum }}
+{{- else }}
+  - name: {{ $.Release.Name }}-{{ (tpl (printf "%s\n%s\n%s\n%s" $.Release.Name $conf.path ($conf.content | toYaml) $conf.mode) $) | sha1sum }}
+{{- end }}
+    mountPath: {{ $conf.path }}
+    {{- if not $conf.dir }}
+    subPath: {{ base $conf.path }}
+    {{- end }}
   {{- end }}
   {{- range $claim := .Values.volumes.claims }}
   {{- range $subPath, $container := .mounts }}

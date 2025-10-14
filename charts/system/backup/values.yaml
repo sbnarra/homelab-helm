@@ -8,7 +8,7 @@ image:
 command:
 - sh
 - -c
-- apk add --no-cache python3 openssh-client kubectl && python3 /backup.py
+- apk add --no-cache python3 openssh-client kubectl && python3 /opt/backup.py
 env:
   PYTHONUNBUFFERED: 1
   
@@ -19,40 +19,19 @@ env:
   SCALE_DOWN_TIMEOUT: 30
   
   EXCLUDE_NAMESPACES: default,kube-flannel,kube-node-lease,kube-public,kube-system,starr
-  INCLUDE_NAMESPACES: ai,printer,network,smart-home,media,system # tools
+  INCLUDE_NAMESPACES: ai,printer,network,smart-home,media,system,starr # tools
   
   NO_DRY_RUN: 1
 volumes:
   config:
-  - path: /backup.py
-    mode: "0700"
-    content: |
-      {{ tpl (.Files.Get "configmap/backup.py") . }}
-  - path: /k8.py
-    mode: "0700"
-    content: |
-      {{ tpl (.Files.Get "configmap/k8.py") . }}
-  - path: /exec.py
-    mode: "0700"
-    content: |
-      {{ tpl (.Files.Get "configmap/exec.py") . }}
-  - path: /env.py
-    mode: "0700"
-    content: |
-      {{ tpl (.Files.Get "configmap/env.py") . }}
-  - path: /data.py
-    mode: "0700"
-    content: |
-      {{ tpl (.Files.Get "configmap/data.py") . }}
-  - path: /context.py
-    mode: "0700"
-    content: |
-      {{ tpl (.Files.Get "configmap/context.py") . }}
+  - path: "/opt"
+    mode: "0666"
+    dir: configmap/scripts
 
   - path: /root/.ssh/config
     mode: "0644"
     content: |
-      {{ tpl (.Files.Get "configmap/ssh_config") . }}
+      {{ tpl (.Files.Get "configmap/ssh/ssh_config") . }}
   secret:
   - path: /root/.ssh/id_ed25519
     content: "{{ .Values.private_key | b64dec }}"
