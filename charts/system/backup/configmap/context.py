@@ -3,11 +3,10 @@ import threading
 import traceback
 
 class Context:
-    def __init__(self, node, namespace, deployment, no_dry_run):
+    def __init__(self, node, namespace, deployment):
         self.node = node
         self.namespace = namespace
         self.deployment = deployment
-        self.no_dry_run = no_dry_run
 
     def __str__(self):
         ts = datetime.now().strftime("%H:%M:%S")
