@@ -10,3 +10,6 @@ exclude_namespaces = os.getenv("EXCLUDE_NAMESPACES", "")
 exclude_namespaces = [ns.strip() for ns in exclude_namespaces.split(",") if ns.strip()]
 include_namespaces = os.getenv("INCLUDE_NAMESPACES", "")
 include_namespaces = [ns.strip() for ns in include_namespaces.split(",") if ns.strip()]
+
+def include_namespace(namespace):
+    return namespace not in exclude_namespaces or namespace in include_namespaces

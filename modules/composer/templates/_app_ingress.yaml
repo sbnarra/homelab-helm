@@ -48,13 +48,14 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
 spec:
-  entryPoints: {{ $.Values.entryPoints }}
+  entryPoints:
+{{ $.Values.entryPoints | toYaml | indent 2 }}
   routes:
   - match: Host(`{{ tpl .subdomain $ }}.{{ $.Values.domain }}`)
     kind: Rule
     {{- if not .unprotected }}
     middlewares:
-    {{- range .Values.middlewares }}
+    {{- range $.Values.middlewares }}
     - name: {{ . }}
     {{- end }}
     {{- end }}

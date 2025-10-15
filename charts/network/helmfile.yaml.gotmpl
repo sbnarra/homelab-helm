@@ -57,7 +57,8 @@ releases:
       ingressRoute:
         dashboard:
           matchRule: Host(`routes.{{ .Values.domain }}`)
-          entryPoints: {{ .Values.entryPoints }}
+          entryPoints: 
+{{ .Values.entryPoints | toYaml | indent 10 }}
           middlewares:
           - name: traefik-forward-auth
             namespace: {{ .Values.namespace }}
