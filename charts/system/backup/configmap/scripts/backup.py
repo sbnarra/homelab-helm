@@ -6,11 +6,12 @@ import k8
 import context
 import env
 import data
+import threading
 
 def main():
     print(f"NO_DRY_RUN={env.no_dry_run},CONCURRENCY_NAMESPACE={env.namespace_concurrency},CONCURRENCY_DEPLOYMENT={env.deployment_concurrency}")
     with ThreadPoolExecutor(max_workers=env.namespace_concurrency, thread_name_prefix="ns") as namespaceExecutor:
-        with ThreadPoolExecutor(max_workers=env.deployment_concurrency, thread_name_prefix="thread") as deploymentExecutor:
+        with ThreadPoolExecutor(max_workers=env.deployment_concurrency, thread_name_prefix="main") as deploymentExecutor:
             backup_cluster(namespaceExecutor, deploymentExecutor)
 
 def backup_cluster(namespaceExecutor, deploymentExecutor):
@@ -31,6 +32,9 @@ def backup_cluster(namespaceExecutor, deploymentExecutor):
         if k8.get_nodes_by_label({"node/backups": 1, "node/host": node_ip}):
             backup_nodes.add(node_ip)
 
+    print(f"all_nodes={all_nodes}")
+    print(f"namespace_nodes={namespace_nodes}")
+    print(f"backup_nodes={backup_nodes}")
     exec.setup_ssh(all_nodes)
 
     futures = []
@@ -62,7 +66,11 @@ def backup_deployment(ctx, backup_nodes):
         k8.scale_up(ctx, replicas)
         raise
 
-    k8_scale_up = threading.Thread(target=k8.scale_up, args=(ctx, replicas))
+    k8_scale_up = threading.Thread(
+        target=k8.scale_up,
+        args=(ctx, replicas),
+        name=threading.current_thread().name
+    )
     k8_scale_up.start()
 
     for backup_distribution_node in backup_distribution_nodes:

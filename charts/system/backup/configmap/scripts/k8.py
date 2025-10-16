@@ -70,4 +70,4 @@ def _wait_deployment_replicas(ctx, replicas, timeout, log_interval=10):
     ctx.info(_wait_deployment_replicas_msg(ctx, pods_ready, replicas))
 
 def _wait_deployment_replicas_msg(ctx, pods_ready, replicas):
-    return f"has {pods_ready}/{replicas} ready"
+    return f"has {pods_ready}/{replicas} pods ready"

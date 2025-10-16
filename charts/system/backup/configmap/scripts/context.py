@@ -11,10 +11,16 @@ class Context:
     def __str__(self):
         ts = datetime.now().strftime("%H:%M:%S")
         name = threading.current_thread().name
-        return f"[{ts}][{name}] {self.node}/{self.namespace}/{self.deployment}"
+        return f"[{ts}][{name}] {self.id()}"
+
+    def id(self):
+        return f"{self.node}/{self.namespace}/{self.deployment}"
 
     def throw(self, msg):
         raise Exception(f"{self} {msg}")
+
+    def debug(self, msg):
+        self.log("DEBUG", msg)
 
     def info(self, msg):
         self.log("INFO", msg)
@@ -25,4 +31,4 @@ class Context:
     def log(self, level, msg):
         ts = datetime.now().strftime("%H:%M:%S")
         name = threading.current_thread().name
-        print(f"[{ts}][{level}][{name}] {self.node}/{self.namespace}/{self.deployment} {msg}")
+        print(f"[{ts}][{level}][{name}] {self.id()} {msg}")
