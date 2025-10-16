@@ -38,8 +38,17 @@ exports:
     hostIPC: false # TODO: remove this, only used by ollama old gpu.yaml
     nodeSelector: {}
     affinity:
-      required: false
-      labels: {}
+      required: 
+        default: true
+        labels: {}
+        # kubernetes.io/arch:
+          # values: [amd64]
+      preferred: 
+        default: true
+        labels: {}
+        # kubernetes.io/arch:
+          # weight: 60
+          # values: [amd64]
     env: {}
     secretEnv: {}
     args: []

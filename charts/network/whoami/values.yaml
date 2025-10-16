@@ -13,12 +13,3 @@ ports:
   ClusterIP:
   - port: 80
     subdomain: whoami
-    # unprotected: true
-# affinity:
-#   required: true
-#   labels:
-#     s:
-#     - ks
-#     - jkds
-#     foo:
-#     - bar

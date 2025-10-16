@@ -1,42 +1,44 @@
 {{- define "spec.affinity" }}
+{{- $requiredAffinity := or .Values.affinity.required.default .Values.affinity.required.labels }}
+{{- $preferredAffinity := or .Values.affinity.preferred.default .Values.affinity.preferred.labels }}
+{{- if or $requiredAffinity $preferredAffinity }}
 affinity:
   nodeAffinity:
-    {{- if and .Values.affinity .Values.affinity.required }}
+{{- end }}
+    {{- if $requiredAffinity }}
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
       - matchExpressions:
-        {{- range $key, $values := .Values.affinity.labels }}
-        - key: {{ $key }}
-          operator: In
-          values: 
-          {{- range $values }}
-          - {{ . }}
+    {{- end }}
+    {{- if .Values.affinity.required.default }}
+        - key: affinity/{{ .Release.Namespace }}
+          operator: Exists
+    {{- end }}
+    {{- range $k, $v := .Values.affinity.required.labels }}
+        - key: {{ $k }}
+          operator: {{ $v.operator | default "In" }}
+          {{- if $v.values }}
+          values: {{ $v.values }}
           {{- end }}
-        {{- end }}
-    {{- else }}
+    {{- end }}
+    {{- if $preferredAffinity }}
     preferredDuringSchedulingIgnoredDuringExecution:
-    {{- if and .Values.affinity .Values.affinity.labels }}
-    - weight: 60
+    {{- end }}
+    {{- range $k, $v := .Values.affinity.preferred.labels }}
+    - weight: {{ $v.weight }}
       preference:
         matchExpressions:
-        {{- range $key, $values := .Values.affinity.labels }}
-        - key: {{ $key }}
-          operator: In
-          values: 
-          {{- range $values }}
-          - {{ . }}
+        - key: {{ $k }}
+          operator: {{ $v.operator | default "In" }}
+          {{- if $v.values }}
+          values: {{ $v.values }}
           {{- end }}
-        {{- end }}
     {{- end }}
+    {{- if .Values.affinity.preferred.default }}
     - weight: 40
       preference:
         matchExpressions:
         - key: affinity/{{ .Release.Namespace }}.{{ .Release.Name }}
-          operator: Exists
-    - weight: 20
-      preference:
-        matchExpressions:
-        - key: affinity/{{ .Release.Namespace }}
           operator: Exists
     {{- end }}
 {{- end }}
