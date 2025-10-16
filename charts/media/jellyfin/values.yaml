@@ -1,11 +1,11 @@
 image:
   registry: lscr.io
-  name: linuxserver/emby
+  name: linuxserver/jellyfin
   tag: latest
 ports:
   ClusterIP:
   - port: 8096
-    subdomain: media
+    subdomain: jelly
   LoadBalancer:
   - port: 8096
     name: public
@@ -16,3 +16,5 @@ volumes:
   - claim: "{{ .Values.mediaStorageClaim }}"
     mounts:
       library: /media
+gpu: 
+  enabled: true
