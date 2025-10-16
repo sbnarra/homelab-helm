@@ -12,49 +12,23 @@ machine_ips:
   rx4: 192.168.1.2
   op5: 192.168.1.3
   rp4: 192.168.1.4
-
 namespace_persistence:
   network:
     source: "{{ .Values.machine_ips.r5c }}"
-    # sync:
-    backups:
-    - "{{ .Values.machine_ips.rx4 }}"
-    - "{{ .Values.machine_ips.rp4 }}"
   tools:
     source: "{{ .Values.machine_ips.op5 }}"
-    backups:
-    - "{{ .Values.machine_ips.rx4 }}"
-    - "{{ .Values.machine_ips.rp4 }}"  
   ai:
     source: "{{ .Values.machine_ips.op5 }}"
-    backups:
-    - "{{ .Values.machine_ips.rx4 }}"
-    - "{{ .Values.machine_ips.rp4 }}"
-  starr:
-    source: "{{ .Values.machine_ips.rx4 }}"
-    backups:
-    - "{{ .Values.machine_ips.r5c }}"
-    - "{{ .Values.machine_ips.rp4 }}"
-  media:
-    source: "{{ .Values.machine_ips.rx4 }}"
-    backups:
-    - "{{ .Values.machine_ips.r5c }}"
-    - "{{ .Values.machine_ips.rp4 }}"
   printer:
     source: "{{ .Values.machine_ips.op5 }}"
-    backups:
-    - "{{ .Values.machine_ips.r5c }}"
-    - "{{ .Values.machine_ips.rp4 }}"
+  starr:
+    source: "{{ .Values.machine_ips.rx4 }}"
+  media:
+    source: "{{ .Values.machine_ips.rx4 }}"
   system:
     source: "{{ .Values.machine_ips.rp4 }}"
-    backups:
-    - "{{ .Values.machine_ips.r5c }}"
-    - "{{ .Values.machine_ips.rx4 }}"
   smart-home:
     source: "{{ .Values.machine_ips.rp4 }}"
-    backups:
-    - "{{ .Values.machine_ips.r5c }}"
-    - "{{ .Values.machine_ips.rx4 }}"
 
 # keelPollSchedule: "@weekly"
 keelPollSchedule: "@every 1m"

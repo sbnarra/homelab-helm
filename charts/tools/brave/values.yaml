@@ -13,7 +13,7 @@ env:
 ports:
   ClusterIP:
     - port: 3001
-      subdomain: brave
+      subdomain: browser
       https: true
 volumes:
   persisted:
