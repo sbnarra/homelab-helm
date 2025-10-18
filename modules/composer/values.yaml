@@ -62,11 +62,15 @@ exports:
       #   - port: 80
       #     protocol: TCP
       #     subdomain: app-name
+      #     name: port-name
       #     unprotected: false
       # LoadBalancer:
       #   - port: 8080
+      #     name: port-name
       #     protocol: TCP
     volumes:
+      shm:
+        size: "0"
       persisted: []
         # - /var
         # - /opt

@@ -177,6 +177,12 @@ volumes:
     path: /dev/dri
     type: Directory
 {{- end }}
+{{- if ne .Values.volumes.shm.size "0" }}
+- name: dshm
+  emptyDir:
+    medium: Memory
+    sizeLimit: {{ .Values.volumes.shm.size }}  
+{{- end }}
 {{- range $host := .Values.volumes.host }}
 - name: host-{{ $host | toString | sha1sum }}
   hostPath:
@@ -226,6 +232,10 @@ volumes:
 {{- define "volumeMounts" }}
   {{- if .Values.volumes }}
   volumeMounts:
+  {{- if ne .Values.volumes.shm.size "0" }}
+  - name: dshm
+    mountPath: /dev/shm
+  {{- end }}
   {{- range .Values.volumes.persisted }}
   - name: persisted
     mountPath: {{ . }}

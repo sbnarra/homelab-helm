@@ -71,8 +71,26 @@
 
     {
       "namespace": "system",
-      "name": "Chromium",
+      "name": "Brave",
       "url": "browser.sbnarra.me",
+      "icon": "globe"
+    },
+    {
+      "namespace": "system",
+      "name": "Desktop",
+      "url": "desktop.sbnarra.me",
+      "icon": "globe"
+    },
+    {
+      "namespace": "system",
+      "name": "OrcaSlicer",
+      "url": "slicer.sbnarra.me",
+      "icon": "globe"
+    },
+    {
+      "namespace": "system",
+      "name": "Freecad",
+      "url": "cad.sbnarra.me",
       "icon": "globe"
     },
     {

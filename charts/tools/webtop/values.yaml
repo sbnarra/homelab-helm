@@ -1,11 +1,13 @@
 image:
-  name: linuxserver/brave
-  tag: latest
+  name: linuxserver/webtop
+  tag: debian-xfce
 env:
+  DOCKER_MODS: linuxserver/mods:universal-package-install
+  INSTALL_PACKAGES: xarchiver|vim|curl|zip
 ports:
   ClusterIP:
   - port: 3001
-    subdomain: browser
+    subdomain: desktop
     https: true
 volumes:
   shm:
@@ -15,7 +17,7 @@ volumes:
   claims:
   - claim: "{{ .Values.sharedStorageClaim }}"
     mounts:
-      downloads: /downloads
+      /: /workspace
 gpu:
   enabled: true
 security:
