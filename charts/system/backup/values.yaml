@@ -20,7 +20,7 @@ env:
   # INCLUDE_NAMESPACES: ai,printer,network,smart-home,media,system,starr # tools
   # INCLUDE_NAMESPACES: media
 
-  SKIP_SHARED: 1
+  # SKIP_SHARED: 1
   SKIP_TERRAFORM_BACKEND: 1
 
   NO_DRY_RUN: 1
