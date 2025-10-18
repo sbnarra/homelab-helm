@@ -1,2 +1,3 @@
 *.ignore
 */**/charts/
+__pycache__

@@ -8,27 +8,35 @@ image:
 command:
 - sh
 - -c
-- apk add --no-cache python3 openssh-client kubectl && python3 /opt/backup.py
+- apk add --no-cache python3 openssh-client kubectl && python3 /opt/main.py
 env:
   PYTHONUNBUFFERED: 1
-  
-  CONCURRENCY_NAMESPACE: 10
-  CONCURRENCY_DEPLOYMENT: 2
 
+  JOB_CONCURRENCY: 2
   SCALE_DOWN_TIMEOUT: 30
   SCALE_UP_TIMEOUT: 600 # this is high to allow time for vscode to come back up 
-  
+
   EXCLUDE_NAMESPACES: default,kube-flannel,kube-node-lease,kube-public,kube-system
   # INCLUDE_NAMESPACES: ai,printer,network,smart-home,media,system,starr # tools
   # INCLUDE_NAMESPACES: media
-  
+
+  SKIP_SHARED: 1
+  SKIP_TERRAFORM_BACKEND: 1
+
   NO_DRY_RUN: 1
+  LOG_LEVEL: INFO
 volumes:
   config:
-  - path: "/opt"
+  - path: /opt/main.py
+    mode: "0644"
+    content: |
+      {{ tpl (.Files.Get "configmap/main.py") . }}
+  - path: /opt/lib
     mode: "0666"
-    dir: configmap/scripts
-
+    dir: configmap/lib
+  - path: /opt/backup
+    mode: "0666"
+    dir: configmap/backup
   - path: /root/.ssh/config
     mode: "0644"
     content: |

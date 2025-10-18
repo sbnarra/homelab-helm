@@ -1,19 +1,17 @@
-import exec
+from lib import exec
 import time
 
 def exists(ctx):
-    return exec.run(f"ssh {ctx.node} ls /lab/persistence/{ctx.namespace}/{ctx.deployment}", check=False, silent=True).returncode == 0
+    return exec.run(ctx, f"ssh {ctx.node} ls /lab/persistence/{ctx.namespace}/{ctx.deployment}", check=False, silent=True).returncode == 0
 
-def sync(ctx, src_node, target_node):
-    src = f"/lab/persistence/{ctx.namespace}/{ctx.deployment}/"
-    dst = f"{target_node}:/lab/persistence/{ctx.namespace}/{ctx.deployment}"
+def sync(ctx, src_node, src_dir, target_node, target_dir):
     rsync = 'rsync -avz --delete --rsync-path=\\"sudo rsync\\"'
     rsync_ssh = '-e \\"ssh -F /home/lab/.ssh/config\\"'
 
     ctx.debug(f"backing up {src_node} -> {target_node}")
 
     start_time = time.time()
-    exec.dry(f'ssh -A {src_node} "sudo {rsync} {rsync_ssh} {src} lab@{dst}"')
+    exec.dry(ctx, f'ssh -A {src_node} "sudo {rsync} {rsync_ssh} {src_dir} lab@{target_node}:{target_dir}"')
     duration = time.time() - start_time
 
     minutes = int(duration // 60)

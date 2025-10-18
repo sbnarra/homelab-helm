@@ -25,6 +25,14 @@ templates:
     needs:
     - media
 
+  requiresShared:
+    inherit:
+    - template: requiresPersistence
+    values:
+    - sharedStorageClaim: shared-{{ exec "pwd" (list) | trim | base }}
+    needs:
+    - shared
+
 ########################################################
 
   storage:
@@ -44,3 +52,11 @@ templates:
     values:
     - nfs:
         path: /lab/media
+
+  sharedStorage:
+    inherit:
+    - template: storage
+    name: media
+    values:
+    - nfs:
+        path: /lab/shared

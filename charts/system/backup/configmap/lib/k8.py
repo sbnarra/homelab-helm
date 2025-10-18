@@ -1,6 +1,5 @@
-import exec
+from lib import exec, env
 import time
-import env
 
 def scale_up(ctx, replicas):
     if replicas == 0: return
@@ -24,32 +23,32 @@ def scale_down(ctx):
         raise
     return replicas
 
-def pv_node_ip(namespace):
+def pv_node_ip(ctx, namespace):
     cmd = f"kubectl get pv persistence-{namespace} {_jsonpath(".spec.nfs.server")}"
-    return exec.out(cmd, check=False, silent=True)
+    return exec.out(ctx, cmd, check=False, silent=True)
 
-def get_nodes_by_label(labels):
+def get_nodes_by_label(ctx, labels):
     label_selector = ",".join([f"{k}={v}" for k, v in labels.items()])
-    output = exec.out(f"kubectl get nodes -l {label_selector} {_jsonpath(".items[*].metadata.name")}")
+    output = exec.out(ctx, f"kubectl get nodes -l {label_selector} {_jsonpath(".items[*].metadata.name")}")
     return output.split()
 
 def _jsonpath(path):
     return "-o jsonpath='{"+path+"}'"
 
-def resource_names(resource, namespace = "global"):
-    output = exec.out(f"kubectl get {resource} -n {namespace} {_jsonpath(".items[*].metadata.name")}")
+def resource_names(ctx, resource, namespace = "global"):
+    output = exec.out(ctx, f"kubectl get {resource} -n {namespace} {_jsonpath(".items[*].metadata.name")}")
     return [name for name in output.split() if name]
 
 def _get_deployment_replicas(ctx):
-    result = exec.out(f"kubectl get deployment -l app.kubernetes.io/name={ctx.deployment} -n {ctx.namespace} -o custom-columns=REPLICAS:.status.replicas --no-headers").strip()
+    result = exec.out(ctx, f"kubectl get deployment -l app.kubernetes.io/name={ctx.deployment} -n {ctx.namespace} -o custom-columns=REPLICAS:.status.replicas --no-headers").strip()
     return int(result) if result and result.isdigit() else 0
 
 def _set_deployment_replicas(ctx, current_replicas, target_replicas):
     ctx.info(f"setting replicas {current_replicas} -> {target_replicas}")
-    exec.dry(f"kubectl scale deployment {ctx.deployment} -n {ctx.namespace} --replicas={target_replicas}")
+    exec.dry(ctx, f"kubectl scale deployment {ctx.deployment} -n {ctx.namespace} --replicas={target_replicas}")
 
 def _get_deployment_pods_ready(ctx):
-    result = exec.out(f"kubectl get deployment {ctx.deployment} -n {ctx.namespace} {_jsonpath(".status.readyReplicas")}").strip()
+    result = exec.out(ctx, f"kubectl get deployment {ctx.deployment} -n {ctx.namespace} {_jsonpath(".status.readyReplicas")}").strip()
     return int(result) if result and result.isdigit() else 0
 
 def _wait_deployment_replicas(ctx, replicas, timeout, log_interval=10):
@@ -57,7 +56,7 @@ def _wait_deployment_replicas(ctx, replicas, timeout, log_interval=10):
     msg = ""
     while True:
         pods_ready = _get_deployment_pods_ready(ctx)
-        msg = _wait_deployment_replicas_msg(ctx, pods_ready, replicas)
+        msg = _wait_deployment_replicas_msg(pods_ready, replicas)
 
         if pods_ready == replicas:
             break
@@ -67,7 +66,7 @@ def _wait_deployment_replicas(ctx, replicas, timeout, log_interval=10):
         if duration % log_interval == 0:
             ctx.info(f"{msg} after {duration}s, still waiting")
         time.sleep(1)
-    ctx.info(_wait_deployment_replicas_msg(ctx, pods_ready, replicas))
+    ctx.info(_wait_deployment_replicas_msg(pods_ready, replicas))
 
-def _wait_deployment_replicas_msg(ctx, pods_ready, replicas):
+def _wait_deployment_replicas_msg(pods_ready, replicas):
     return f"has {pods_ready}/{replicas} pods ready"
