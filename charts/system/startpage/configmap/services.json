@@ -27,6 +27,18 @@
     },
     {
       "namespace": "...",
+      "name": "Freecad",
+      "url": "cad.sbnarra.me",
+      "icon": "codesandbox"
+    },
+    {
+      "namespace": "...",
+      "name": "OrcaSlicer",
+      "url": "slicer.sbnarra.me",
+      "icon": "printer"
+    },
+    {
+      "namespace": "...",
       "name": "Neptune 4+",
       "protocol": "http",
       "url": "192.168.1.253",
@@ -40,58 +52,21 @@
     },
     {
       "namespace": "...",
-      "name": "NextCloud",
-      "url": "files.sbnarra.me",
-      "icon": "image"
-    },
-    {
-      "namespace": "...",
       "name": "Overseerr",
       "url": "searcher.sbnarra.me",
       "icon": "search"
     },
     {
       "namespace": "...",
-      "name": "Emby",
+      "name": "Jellyfin",
       "url": "media.sbnarra.me",
       "icon": "play"
-    },
-    {
-      "namespace": "...",
-      "name": "Calibre",
-      "url": "calibre.sbnarra.me",
-      "icon": "book"
     },
     {
       "namespace": "...",
       "name": "Vaultwarden",
       "url": "vault.sbnarra.me",
       "icon": "lock"
-    },
-
-    {
-      "namespace": "system",
-      "name": "Brave",
-      "url": "browser.sbnarra.me",
-      "icon": "globe"
-    },
-    {
-      "namespace": "system",
-      "name": "Desktop",
-      "url": "desktop.sbnarra.me",
-      "icon": "globe"
-    },
-    {
-      "namespace": "system",
-      "name": "OrcaSlicer",
-      "url": "slicer.sbnarra.me",
-      "icon": "globe"
-    },
-    {
-      "namespace": "system",
-      "name": "Freecad",
-      "url": "cad.sbnarra.me",
-      "icon": "globe"
     },
     {
       "namespace": "system",
@@ -119,13 +94,6 @@
     },
     {
       "namespace": "system",
-      "name": "kvm.nas",
-      "protocol": "http",
-      "url": "192.168.1.254",
-      "icon": "wifi"
-    },
-    {
-      "namespace": "system",
       "name": "Keel",
       "url": "updates.sbnarra.me",
       "icon": "refresh-cw"
@@ -146,12 +114,6 @@
     },
     {
       "namespace": "*arr",
-      "name": "SABnzbd",
-      "url": "sabnzbd.sbnarra.me",
-      "icon": "download"
-    },
-    {
-      "namespace": "*arr",
       "name": "Sonarr",
       "url": "shows.sbnarra.me",
       "icon": "tv"
@@ -161,18 +123,6 @@
       "name": "Radarr",
       "url": "movies.sbnarra.me",
       "icon": "film"
-    },
-    {
-      "namespace": "*arr",
-      "name": "Lidarr",
-      "url": "music.sbnarra.me",
-      "icon": "music"
-    },
-    {
-      "namespace": "*arr",
-      "name": "Readarr",
-      "url": "books.sbnarra.me",
-      "icon": "book-open"
     },
     {
       "namespace": "*arr",
@@ -244,21 +194,15 @@
     },
     {
       "namespace": "misc",
-      "name": "OpenThread Border Router",
-      "url": "otbr.sbnarra.me",
-      "icon": "wifi"
-    },
-    {
-      "namespace": "misc",
       "name": "Webtop",
       "url": "desktop.sbnarra.me",
       "icon": "monitor"
     },
     {
       "namespace": "misc",
-      "name": "VS Code Test",
-      "url": "vstest.sbnarra.me",
-      "icon": "code"
+      "name": "Brave",
+      "url": "browser.sbnarra.me",
+      "icon": "globe"
     }
   ]
 }
