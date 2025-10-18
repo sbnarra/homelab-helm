@@ -1,10 +1,10 @@
 from lib import exec, env
 import time
 
-def scale_up(ctx, replicas):
+def scale_up(ctx, replicas, skip_scale_wait_deployments):
     if replicas == 0: return
     _set_deployment_replicas(ctx, 0, replicas)
-    if env.no_dry_run:
+    if env.no_dry_run and ctx.deployment not in skip_scale_wait_deployments:
         try: _wait_deployment_replicas(ctx, replicas, env.scale_up_timeout)
         except Exception as e:
             ctx.error(f"scale up failed: {e}", e)
@@ -30,6 +30,11 @@ def pv_node_ip(ctx, namespace):
 def get_nodes_by_label(ctx, labels):
     label_selector = ",".join([f"{k}={v}" for k, v in labels.items()])
     output = exec.out(ctx, f"kubectl get nodes -l {label_selector} {_jsonpath(".items[*].metadata.name")}")
+    return output.split()
+
+def get_deployments_by_label(ctx, labels):
+    label_selector = ",".join([f"{k}={v}" for k, v in labels.items()])
+    output = exec.out(ctx, f"kubectl get deployment -l {label_selector} -n {ctx.namespace} {_jsonpath(".items[*].metadata.name")}")
     return output.split()
 
 def _jsonpath(path):

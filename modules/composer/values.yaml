@@ -8,6 +8,7 @@ exports:
       tag: null
       architecture: null
       pullPolicy: IfNotPresent
+    labels: {}
     deploymentStrategy: RollingUpdate
     registryPortOverrides: # TODO: remove this
       enabled: false # if set to false, keel needs insecureRegistry also set to fale

@@ -11,18 +11,13 @@ command:
 - apk add --no-cache python3 openssh-client kubectl && python3 /opt/main.py
 env:
   PYTHONUNBUFFERED: 1
-
-  JOB_CONCURRENCY: 2
+  JOB_CONCURRENCY: 8
   SCALE_DOWN_TIMEOUT: 30
-  SCALE_UP_TIMEOUT: 600 # this is high to allow time for vscode to come back up 
-
+  SCALE_UP_TIMEOUT: 120
   EXCLUDE_NAMESPACES: default,kube-flannel,kube-node-lease,kube-public,kube-system
   # INCLUDE_NAMESPACES: ai,printer,network,smart-home,media,system,starr # tools
   # INCLUDE_NAMESPACES: media
-
-  # SKIP_SHARED: 1
   SKIP_TERRAFORM_BACKEND: 1
-
   NO_DRY_RUN: 1
   LOG_LEVEL: INFO
 volumes:

@@ -6,6 +6,9 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
+    {{- range $k, $v := .Values.labels }}
+    {{ $k }}: {{ $v | quote }}
+    {{- end }}
   annotations:
     {{- include "annotations.keel" . | indent 4 }}
 spec:

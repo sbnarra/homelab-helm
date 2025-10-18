@@ -2,6 +2,10 @@ image:
   registry: lscr.io
   name: linuxserver/code-server
   tag: latest
+labels:
+  backup/skip: 0
+  backup/scale.skip: 0
+  backup/scale.no-wait: 1
 env: # https://mods.linuxserver.io/?mod=code-server
   # DOCKER_MODS: "linuxserver/mods:universal-docker-in-docker"
   # MODS_DIND_PERSISTENCE: /docker
