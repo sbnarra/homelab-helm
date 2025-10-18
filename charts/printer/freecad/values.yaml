@@ -16,5 +16,9 @@ ports:
 volumes:
   persisted:
   - /config
+  claims:
+  - claim: "{{ .Values.sharedStorageClaim }}"
+    mounts:
+      freecad: /freecad
 gpu:
-  enabled: true
+  enabled: false

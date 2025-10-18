@@ -12,11 +12,15 @@ env:
 #     port: 3000
 ports:
   ClusterIP:
-    - port: 3001
-      subdomain: browser
-      https: true
+  - port: 3001
+    subdomain: browser
+    https: true
 volumes:
   persisted:
-    - /config
+  - /config
+  claims:
+  - claim: "{{ .Values.sharedStorageClaim }}"
+    mounts:
+      downloads: /downloads
 gpu:
-  enabled: true
+  enabled: false

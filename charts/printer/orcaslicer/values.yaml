@@ -17,9 +17,10 @@ volumes:
   persisted:
   - /config
   claims:
-  - claim: freecad-exports-{{ .Release.Namespace }}
+  - claim: "{{ .Values.sharedStorageClaim }}"
     mounts:
-      config/exports: /freecad
+      freecad: /freecad
+      downloads: /downloads
 gpu:
   enabled: true
 affinity:
@@ -30,6 +31,3 @@ affinity:
     labels:
       kubernetes.io/arch:
         values: [amd64]
-      kubernetes.io/hostname: 
-        values: 
-        - rx4-node

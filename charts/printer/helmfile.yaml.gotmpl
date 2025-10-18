@@ -5,18 +5,13 @@ bases:
 releases:
 - inherit:
   - template: persistenceStorage
+- inherit:
+  - template: sharedStorage
 
 - name: freecad
   inherit:
-  - template: requiresNothing
-
-- name: freecad-exports
-  inherit:
-  - template: storage
-  values:
-  - nfs:
-      path: /lab/persistence/printer/freecad
+  - template: requiresSharedStorage
 
 - name: orcaslicer
   inherit:
-  - template: requiresPersistence
+  - template: requiresSharedStorage

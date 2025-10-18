@@ -25,13 +25,13 @@ templates:
     needs:
     - media
 
-  requiresShared:
+  requiresSharedStorage:
     inherit:
     - template: requiresPersistence
     values:
-    - sharedStorageClaim: shared-{{ exec "pwd" (list) | trim | base }}
+    - sharedStorageClaim: shared-storage-{{ exec "pwd" (list) | trim | base }}
     needs:
-    - shared
+    - shared-storage
 
 ########################################################
 
@@ -51,12 +51,14 @@ templates:
     name: media
     values:
     - nfs:
+        server: {{`"{{ .Values.machine_ips.rx4 }}"`}}
         path: /lab/media
 
   sharedStorage:
     inherit:
     - template: storage
-    name: media
+    name: shared-storage
     values:
     - nfs:
+        server: {{`"{{ .Values.machine_ips.op5 }}"`}}
         path: /lab/shared

@@ -74,9 +74,11 @@ volumes:
     content: "{{ .Values.public_key }}"
     mode: "0644"
   persisted:
-    - /config
-    - /workspace
-    - /modcache
-    # - /docker
+  - /config
+  - /modcache
+  claims:
+  - claim: "{{ .Values.sharedStorageClaim }}"
+    mounts:
+      /: /workspace
 security:
   privileged: true

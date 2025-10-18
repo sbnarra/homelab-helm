@@ -5,6 +5,8 @@ bases:
 releases:
 - inherit:
   - template: persistenceStorage
+- inherit:
+  - template: sharedStorage
 
 - name: vaultwarden
   inherit:
@@ -12,8 +14,8 @@ releases:
 
 - name: vscode
   inherit:
-  - template: requiresPersistence
+  - template: requiresSharedStorage
 
 - name: brave
   inherit:
-  - template: requiresPersistence
+  - template: requiresSharedStorage
