@@ -16,7 +16,6 @@ main() {
   fi
 
   cd $helmfile_dir && \
-    # helmfile --skip-deps --environment ${env} ${@:-template}
     helmfile ${@:-template}
 }
 
