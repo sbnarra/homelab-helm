@@ -1,0 +1,15 @@
+# https://github.com/grafana/helm-charts/tree/main/charts/loki-stack
+loki-stack:
+  loki:
+    isDefault: false
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: affinity/{{ .Release.Namespace }}
+              operator: Exists
+    persistence:
+      enabled: true
+      subPath: loki/data
+      existingClaim: persistence-{{ .Values.namespace }}

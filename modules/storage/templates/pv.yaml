@@ -18,6 +18,6 @@ spec:
 {{- $nsSource := get (get .Values.namespace_persistence .Release.Namespace) "source" }}
 {{- $server := default $nsSource (.Values.nfs).server | required (printf "missing .Values.nfs.server OR .Values.namespace_persistence.%s.source" .Release.Namespace) }}
     server: {{ tpl $server . }}
-    path: {{ (.Values.nfs).path | default (printf "%s/%s" .Values.persistencePath .Release.Namespace)  }}
+    path: {{ tpl ((.Values.nfs).path | default (printf "%s/%s" .Values.persistencePath .Release.Namespace)) . }}
     readOnly: {{ (.Values.nfs).readOnly | default false  }}
   {{- end }}

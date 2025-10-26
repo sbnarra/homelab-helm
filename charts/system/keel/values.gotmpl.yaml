@@ -1,15 +1,16 @@
-# TODO: upgrade to "latest" once issue is resolved
-# https://github.com/keel-hq/keel/issues/780
 keel:
-  image:
-    tag: "0.19"
   insecureRegistry: false
+  basicauth:
+    enabled: true
+    user: {{ .Values.defaultUser }}
+    password: {{ .Values.defaultPassword }}
   polling:
     enabled: true
-    defaultSchedule: "@weekly" # https://keel.sh/docs/#cron-expression-format
+    defaultSchedule: "@midnight" # https://keel.sh/docs/#cron-expression-format
   slack:
     enabled: true
     botName: keel
+    botToken: {{ .Values.slackToken }}
     channel: keel-updates
     approvalsChannel: keel-updates
   affinity:
@@ -19,9 +20,7 @@ keel:
         - matchExpressions:
           - key: kubernetes.io/arch
             operator: In
-            values:
-            - amd64
-
+            values: [amd64]
 
 # composer
 selectorKey: app

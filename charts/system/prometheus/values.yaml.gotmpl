@@ -1,15 +1,25 @@
+_nodeAffinity: &nodeAffinity
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: affinity/{{ .Release.Namespace }}
+          operator: Exists
+
 # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
 kube-prometheus-stack:
   nameOverride: prometheus
   fullnameOverride: prometheus
 
   grafana:
+    affinity: *nodeAffinity
     nameOverride: grafana
     fullnameOverride: grafana
     admin:
       existingSecret: grafana-credentials
     ingress:
       enabled: true
+      hosts: [monitor.{{ .Values.domain }}]
       ingressClassName: traefik
       annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
@@ -22,6 +32,9 @@ kube-prometheus-stack:
 
   prometheus:
     prometheusSpec:
+      affinity: *nodeAffinity
+      retention: 30d
+      retentionSize: 15GiB
       storageSpec:
         volumeClaimTemplate:
           metadata:
@@ -31,16 +44,23 @@ kube-prometheus-stack:
             selector:
             matchLabels:
               type: prometheus-persistence-system
-            accessModes:
-            - ReadWriteMany
+            accessModes: [ReadWriteMany]
             resources:
               requests:
                 storage: 1Gi
+
+  prometheusOperator:
+    affinity: *nodeAffinity
+
+  kube-state-metrics:
+    nameOverride: kube-state-metrics
+    fullnameOverride: kube-state-metrics
+    affinity: *nodeAffinity
 
   prometheus-node-exporter:
     nameOverride: node-exporter
     fullnameOverride: node-exporter
 
-  kube-state-metrics:
-    nameOverride: kube-state-metrics
-    fullnameOverride: kube-state-metrics
+  alertmanager:
+    enabled: false
+

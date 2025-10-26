@@ -30,8 +30,7 @@ namespace_persistence:
   smart-home:
     source: "{{ .Values.machine_ips.rp4 }}"
 
-# keelPollSchedule: "@weekly"
-keelPollSchedule: "@every 1m"
+keelPollSchedule: "@midnight"
 
 entryPoints:
 - web

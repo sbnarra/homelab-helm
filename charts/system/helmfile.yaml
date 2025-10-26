@@ -23,17 +23,9 @@ releases:
   - template: requiresNothing
 
 - name: keel
-  namespace: kube-system
   inherit:
   - template: requiresNothing
-  values:
-  - keel:
-      basicauth:
-        enabled: true
-        user: {{ .Values.defaultUser }}
-        password: {{ .Values.defaultPassword }}
-      slack:
-        token: {{ .Values.slackToken }}
+  values: [keel/values.yaml.gotmpl]
 
 # this storage is required as prometheus creates it own pvc
 - name: prometheus-persistence
@@ -42,26 +34,15 @@ releases:
   values:
   - unclaimed: true
     nfs:
-      path: {{ .Values.persistencePath }}/{{ .Values.namespace }}/prometheus
+      path: "{{ .Values.persistencePath }}/{{ .Release.Namespace }}/prometheus"
 
 - name: prometheus
   inherit:
-  - template: requiresPersistence # used by grafana (TODO: see if can split out)
-  values:
-  - kube-prometheus-stack:
-      grafana:
-        ingress:
-          hosts:
-          - monitor.{{ .Values.domain }}
-  needs:
-  - prometheus-persistence
+  - template: requiresPersistence
+  values: [prometheus/values.yaml.gotmpl]
+  needs: [prometheus-persistence]
 
 - name: loki
   inherit:
   - template: requiresPersistence
-  values:
-  - loki-stack:
-      loki:
-        persistence:
-          subPath: loki/data
-          existingClaim: persistence-{{ .Values.namespace }}
+  values: [loki/values.yaml.gotmpl]

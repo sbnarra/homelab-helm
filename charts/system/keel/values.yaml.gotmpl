@@ -1,0 +1,32 @@
+keel:
+  insecureRegistry: false
+  basicauth:
+    enabled: true
+    user: {{ .Values.defaultUser }}
+    password: {{ .Values.defaultPassword }}
+  polling:
+    enabled: true
+    defaultSchedule: "@midnight" # https://keel.sh/docs/#cron-expression-format
+  slack:
+    enabled: true
+    botName: keel
+    botToken: {{ .Values.slackToken }}
+    channel: keel-updates
+    approvalsChannel: keel-updates
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/arch
+            operator: In
+            values: [amd64]
+
+# composer
+selectorKey: app
+selectorValue: keel
+ports:
+  ClusterIP:
+  - port: 9300
+    targetPort: 9300
+    subdomain: updates

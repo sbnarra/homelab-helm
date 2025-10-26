@@ -1,0 +1,44 @@
+bases:
+- ../../config/environments.yaml.gotmpl
+- ../../modules/templates.yaml.gotmpl
+---
+repositories:
+- name: traefik
+  url: https://traefik.github.io/charts
+---
+releases:
+- inherit:
+  - template: persistenceStorage
+
+- name: proxy
+  inherit:
+  - template: requiresNothing
+
+- name: whoami
+  inherit:
+  - template: requiresPersistence
+
+- name: speedtest
+  inherit:
+  - template: requiresPersistence
+
+- name: smokeping
+  inherit:
+  - template: requiresPersistence
+
+# { {- if .Values.isLive }}
+- name: ip-updater
+  inherit:
+  - template: requiresPersistence
+
+- name: traefik-forward-auth
+  inherit:
+  - template: requiresPersistence
+  needs:
+  - traefik
+# { {- end }}
+
+- name: traefik
+  inherit:
+  - template: requiresPersistence
+  values: [traefik/values.yaml.gotmpl]

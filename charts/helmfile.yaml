@@ -1,0 +1,13 @@
+environments:
+  test:
+  live:
+---
+helmfiles:
+  - path: system/helmfile.yaml
+  - path: network/helmfile.yaml
+  - path: smart-home/helmfile.yaml
+  - path: media/helmfile.yaml
+  - path: tools/helmfile.yaml
+  - path: ai/helmfile.yaml
+  - path: starr/helmfile.yaml
+  - path: printer/helmfile.yaml

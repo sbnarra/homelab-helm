@@ -17,5 +17,6 @@ spec:
       labels:
         app.kubernetes.io/name: {{ .Release.Name }}
     spec:
+      {{- include "spec.affinity" . | indent 6 }}
       {{- include "spec.containers" . | indent 6 }}
 {{- end }}

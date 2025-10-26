@@ -40,7 +40,7 @@ templates:
     - template: requiresNothing
     chart: ../../modules/storage
 
-  persistenceStorage:
+  persistenceStorage: # TODO: deploymentStorage
     inherit:
     - template: storage
     name: persistence
@@ -54,7 +54,7 @@ templates:
         server: {{`"{{ .Values.machine_ips.rx4 }}"`}}
         path: /lab/media
 
-  sharedStorage:
+  sharedStorage: # TODO: workspaceStorage
     inherit:
     - template: storage
     name: shared-storage

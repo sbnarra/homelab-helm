@@ -1,3 +1,4 @@
+# https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 traefik:
   env:
   - name: CLOUDFLARE_DNS_API_TOKEN
@@ -16,6 +17,10 @@ traefik:
     websecure:
       tls:
         certResolver: "letsencrypt"
+        domains:
+        - main: {{ .Values.domain }}
+          sans:
+          - "*.{{ .Values.domain }}"
   podSecurityContext:
     fsGroup: 65532
     fsGroupChangePolicy: "OnRootMismatch"
@@ -32,11 +37,29 @@ traefik:
         enabled: true
   persistence:
     enabled: true
+    existingClaim: persistence-network
+    subPath: traefik/data
     path: /data
     accessMode: ReadWriteMany
   ingressRoute:
     dashboard:
       enabled: true
+      matchRule: Host(`routes.{{ .Values.domain }}`)
+      entryPoints: 
+{{ .Values.entryPoints | toYaml | indent 6 }}
+      middlewares:
+      - name: traefik-forward-auth
+        namespace: {{ .Values.namespace }}
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: affinity/{{ .Release.Namespace }}
+            operator: Exists
+  service:
+    externalIPs:
+{{ .Values.controlPlaneIPs | toYaml | indent 4 }}
 
  # deployment:
  #   initContainers:

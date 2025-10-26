@@ -3,13 +3,13 @@ set -e
 
 project_dir=$(dirname $0)
 helmfile_root_dir=$project_dir/charts
-charts=$(grep path $helmfile_root_dir/helmfile.yaml.gotmpl | awk '{print $3}' | cut -d'/' -f1)
+charts=$(grep path $helmfile_root_dir/helmfile.yaml | awk '{print $3}' | cut -d'/' -f1)
 
 main() {
   export HELMFILE_ENVIRONMENT=${HELMFILE_ENVIRONMENT:-${env:-test}}
   echo "HELMFILE_ENVIRONMENT='${HELMFILE_ENVIRONMENT}'"
 
-  if [ ! -e ./helmfile.yaml.gotmpl ]; then
+  if [ ! -e ./helmfile.yaml ]; then
     select_helmfile
   else
     helmfile_dir=$PWD

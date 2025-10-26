@@ -23,3 +23,11 @@ volumes:
       /: /storage
 gpu:
   enabled: true
+affinity:
+  preferred:
+    default: false
+  required:
+    default: false
+    labels:
+      affinity/starr.tdarr-client:
+        operator: Exists
