@@ -58,6 +58,8 @@ exports:
     gpu:
       enabled: false
       user: abc # linuxserver specific by default
+    startpage:
+      icon: link
     ports: {}
       # ClusterIP:
       #   - port: 80

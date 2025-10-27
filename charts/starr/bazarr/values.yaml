@@ -8,6 +8,8 @@ probes:
   startup:
     enabled: true
     port: 6767
+startpage:
+  icon: message-square
 ports:
   ClusterIP:
     - port: 6767

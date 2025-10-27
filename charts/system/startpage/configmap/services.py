@@ -3,6 +3,7 @@ import sys
 sys.dont_write_bytecode = True
 import subprocess
 import json
+import os
 
 def run_kubectl_command(args):
     try:
@@ -48,17 +49,42 @@ def extract_service_from_ingress(ingress):
         'protocol': protocol
     }
 
+def load_local_services():
+    """Load services from local services.json file"""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    services_file = os.path.join(script_dir, 'services.json')
+    
+    if not os.path.exists(services_file):
+        return []
+    
+    try:
+        with open(services_file, 'r') as f:
+            data = json.load(f)
+            return data.get('services', [])
+    except (json.JSONDecodeError, IOError) as e:
+        print(f"Error reading services.json: {e}", file=sys.stderr)
+        return []
+
 def get_services_from_kubectl():
     ingresses = get_all_ingresses()
     if not ingresses:
-        return {'services': []}
-
-    services = []
-    for ingress in ingresses:
-        service = extract_service_from_ingress(ingress)
-        services.append(service)
-    services.sort(key=lambda x: (x['namespace'], x['name']))
-    return {'services': services}
+        kubectl_services = []
+    else:
+        kubectl_services = []
+        for ingress in ingresses:
+            service = extract_service_from_ingress(ingress)
+            kubectl_services.append(service)
+    
+    # Load local services
+    local_services = load_local_services()
+    
+    # Merge: local services + kubectl services
+    all_services = local_services + kubectl_services
+    
+    # Sort by namespace, then by name
+    all_services.sort(key=lambda x: (x['namespace'], x['name']))
+    
+    return {'services': all_services}
 
 def main():
     result = get_services_from_kubectl()

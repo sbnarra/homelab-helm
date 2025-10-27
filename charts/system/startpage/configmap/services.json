@@ -1,148 +1,12 @@
 {
   "services": [
     {
-      "namespace": "...",
-      "name": "Open WebUI",
-      "url": "chat.sbnarra.me",
-      "icon": "message-circle"
-    },
-    {
-      "namespace": "...",
-      "name": "hub.reolink",
-      "protocol": "http",
-      "url": "192.168.1.250",
-      "icon": "camera"
-    },
-    {
-      "namespace": "...",
-      "name": "Home Assistant",
-      "url": "ha.sbnarra.me",
-      "icon": "home"
-    },
-    {
-      "namespace": "...",
-      "name": "Zigbee",
-      "url": "zigbee.sbnarra.me",
-      "icon": "radio"
-    },
-    {
-      "namespace": "...",
-      "name": "Freecad",
-      "url": "cad.sbnarra.me",
-      "icon": "codesandbox"
-    },
-    {
-      "namespace": "...",
-      "name": "OrcaSlicer",
-      "url": "slicer.sbnarra.me",
-      "icon": "printer"
-    },
-    {
-      "namespace": "...",
-      "name": "Neptune 4+",
-      "protocol": "http",
-      "url": "192.168.1.253",
-      "icon": "printer"
-    },
-    {
-      "namespace": "...",
-      "name": "VS Code",
-      "url": "vs.sbnarra.me",
-      "icon": "edit-2"
-    },
-    {
-      "namespace": "...",
-      "name": "Overseerr",
-      "url": "searcher.sbnarra.me",
-      "icon": "search"
-    },
-    {
-      "namespace": "...",
-      "name": "Jellyfin",
-      "url": "media.sbnarra.me",
-      "icon": "play"
-    },
-    {
-      "namespace": "...",
-      "name": "Vaultwarden",
-      "url": "vault.sbnarra.me",
-      "icon": "lock"
-    },
-    {
-      "namespace": "system",
-      "name": "Grafana",
-      "url": "monitor.sbnarra.me",
-      "icon": "bar-chart-2"
-    },
-    {
-      "namespace": "system",
-      "name": "Speedtest",
-      "url": "speedtest.sbnarra.me",
-      "icon": "zap"
-    },
-    {
-      "namespace": "system",
-      "name": "SmokePing",
-      "url": "smokeping.sbnarra.me",
-      "icon": "activity"
-    },
-    {
-      "namespace": "system",
-      "name": "Whoami",
-      "url": "whoami.sbnarra.me",
-      "icon": "user"
-    },
-    {
-      "namespace": "system",
-      "name": "Keel",
-      "url": "updates.sbnarra.me",
-      "icon": "refresh-cw"
-    },
-    {
       "namespace": "system",
       "name": "Adguard",
       "protocol": "http",
       "url": "192.168.0.1:81",
       "icon": "shield"
     },
-
-    {
-      "namespace": "*arr",
-      "name": "QBitVPN UI",
-      "url": "torrents.sbnarra.me",
-      "icon": "download"
-    },
-    {
-      "namespace": "*arr",
-      "name": "Sonarr",
-      "url": "shows.sbnarra.me",
-      "icon": "tv"
-    },
-    {
-      "namespace": "*arr",
-      "name": "Radarr",
-      "url": "movies.sbnarra.me",
-      "icon": "film"
-    },
-    {
-      "namespace": "*arr",
-      "name": "Bazarr",
-      "url": "subtitles.sbnarra.me",
-      "icon": "message-square"
-    },
-    {
-      "namespace": "*arr",
-      "name": "Prowlarr",
-      "url": "indexer.sbnarra.me",
-      "icon": "list"
-    },
-    {
-      "namespace": "*arr",
-      "name": "Tdarr",
-      "url": "tdarr.sbnarra.me",
-      "icon": "video"
-    },
-
     {
       "namespace": "shelly",
       "name": "ct.shelly",
@@ -177,32 +41,6 @@
       "protocol": "http",
       "url": "192.168.1.247",
       "icon": "wifi"
-    },
-
-
-    {
-      "namespace": "misc",
-      "name": "SearXNG",
-      "url": "search.sbnarra.me",
-      "icon": "search"
-    },
-    {
-      "namespace": "misc",
-      "name": "Node-RED",
-      "url": "nodered.sbnarra.me",
-      "icon": "git-branch"
-    },
-    {
-      "namespace": "misc",
-      "name": "Webtop",
-      "url": "desktop.sbnarra.me",
-      "icon": "monitor"
-    },
-    {
-      "namespace": "misc",
-      "name": "Brave",
-      "url": "browser.sbnarra.me",
-      "icon": "globe"
     }
   ]
 }

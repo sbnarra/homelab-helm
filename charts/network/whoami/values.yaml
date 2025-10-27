@@ -1,6 +1,8 @@
 image:
   name: traefik/whoami
 releaseNotes: https://hub.docker.com/r/traefik/whoami/tags
+startpage:
+  icon: user
 probes:
   liveness:
     enabled: true

@@ -12,6 +12,8 @@ probes:
   startup:
     enabled: true
     port: 8265
+startpage:
+  icon: video
 env:
   serverIP: 0.0.0.0
   serverPort: 8266

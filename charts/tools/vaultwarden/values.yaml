@@ -1,6 +1,8 @@
 image:
   name: vaultwarden/server
 releaseNotes: https://github.com/dani-garcia/vaultwarden/releases
+startpage:
+  icon: lock
 env:
   WEBSOCKET_ENABLED: "false"
   WEB_VAULT_ENABLED: "true"

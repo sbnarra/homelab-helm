@@ -8,6 +8,8 @@ probes:
   startup:
     enabled: true
     port: 1880
+startpage:
+  icon: git-branch
 ports:
   ClusterIP:
     - port: 1880

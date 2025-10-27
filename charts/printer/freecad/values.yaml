@@ -1,6 +1,8 @@
 image:
   registry: lscr.io
   name: linuxserver/freecad
+startpage:
+  icon: codesandbox
 probes:
   liveness:
     enabled: true

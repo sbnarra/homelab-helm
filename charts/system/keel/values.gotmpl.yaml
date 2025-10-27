@@ -25,6 +25,8 @@ keel:
 # composer
 selectorKey: app
 selectorValue: keel
+startpage:
+  icon: refresh-cw
 ports:
   ClusterIP:
   - port: 9300

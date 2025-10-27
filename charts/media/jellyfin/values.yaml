@@ -1,6 +1,8 @@
 image:
   registry: lscr.io
   name: linuxserver/jellyfin
+startpage:
+  icon: play
 ports:
   ClusterIP:
   - port: 8096

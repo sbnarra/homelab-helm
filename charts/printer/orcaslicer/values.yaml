@@ -2,6 +2,8 @@ image:
   registry: lscr.io
   name: linuxserver/orcaslicer
   # architecture: amd64
+startpage:
+  icon: printer
 probes:
   liveness:
     enabled: true

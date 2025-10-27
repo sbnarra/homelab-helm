@@ -4,6 +4,8 @@ image:
 env:
   DOCKER_MODS: linuxserver/mods:universal-package-install
   INSTALL_PACKAGES: xarchiver|curl|unzip
+startpage:
+  icon: monitor
 ports:
   ClusterIP:
   - port: 3001

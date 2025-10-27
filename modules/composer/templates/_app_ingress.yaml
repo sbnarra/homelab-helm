@@ -13,6 +13,7 @@ metadata:
   name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
   labels:
     app.kubernetes.io/name: {{ $.Release.Name }}{{- if .name }}-{{ .name }}{{- end }}
+    startpage/icon: {{ $.Values.startpage.icon }}
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: {{ join "," $.Values.entryPoints }}
     {{- if not .unprotected }}

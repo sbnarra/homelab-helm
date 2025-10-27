@@ -5,6 +5,8 @@ command:
 - sh
 - -c
 - apk add --no-cache python3 kubectl && python3 /startpage/main.py
+startpage:
+  icon: home
 env:
   PYTHONUNBUFFERED: 1
 ports:

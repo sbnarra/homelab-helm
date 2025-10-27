@@ -2,6 +2,8 @@ image:
   registry: ghcr.io
   name: ghcr.io/open-webui/open-webui
   tag: main
+startpage:
+  icon: message-circle
 env:
   WEBUI_NAME: "AI"
   WEBUI_URL: "https://ai.{{ .Values.domain }}"

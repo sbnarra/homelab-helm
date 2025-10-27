@@ -1,5 +1,7 @@
 image:
   name: linuxserver/smokeping
+startpage:
+  icon: activity
 ports:
   ClusterIP:
   - port: 80

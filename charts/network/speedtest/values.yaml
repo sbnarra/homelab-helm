@@ -8,6 +8,8 @@ env:
   APP_URL: https://speedtest.{{ .Values.domain }}
   ASSET_URL: https://speedtest.{{ .Values.domain }}
   SPEEDTEST_SCHEDULE: 0 * * * *
+startpage:
+  icon: zap
 ports:
   ClusterIP:
   - port: 80

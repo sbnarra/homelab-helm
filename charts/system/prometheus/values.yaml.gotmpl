@@ -21,6 +21,8 @@ kube-prometheus-stack:
       enabled: true
       hosts: [monitor.{{ .Values.domain }}]
       ingressClassName: traefik
+      labels:
+        startpage/icon: bar-chart-2
       annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
         traefik.ingress.kubernetes.io/router.middlewares: network-x-forwarded-https@kubernetescrd,network-traefik-forward-auth@kubernetescrd

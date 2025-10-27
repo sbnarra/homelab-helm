@@ -1,6 +1,7 @@
 image:
   name: linuxserver/brave
-env:
+startpage:
+  icon: globe
 ports:
   ClusterIP:
   - port: 3001

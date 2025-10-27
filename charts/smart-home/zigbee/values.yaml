@@ -1,6 +1,8 @@
 image:
   name: koenkk/zigbee2mqtt
 deploymentStrategy: Recreate
+startpage:
+  icon: radio
 ports:
   ClusterIP:
   - port: 8080

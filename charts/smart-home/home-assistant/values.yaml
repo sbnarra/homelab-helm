@@ -4,6 +4,8 @@ image:
 hostNetwork: true
 dnsPolicy: ClusterFirstWithHostNet
 deploymentStrategy: Recreate
+startpage:
+  icon: home
 env:
   DOCKER_MODS: linuxserver/mods:homeassistant-hacs
 probes:

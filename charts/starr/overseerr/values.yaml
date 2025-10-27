@@ -8,6 +8,8 @@ probes:
   startup:
     enabled: true
     port: 5055
+startpage:
+  icon: search
 ports:
   ClusterIP:
   - port: 5055

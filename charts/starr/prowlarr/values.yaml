@@ -11,6 +11,8 @@ probes:
   port: 9696
   path: /ping
 ndots: 2
+startpage:
+  icon: list
 ports:
   ClusterIP:
     - port: 9696

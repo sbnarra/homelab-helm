@@ -11,6 +11,8 @@ probes:
     port: 7878
     path: /ping
 ndots: 2
+startpage:
+  icon: film
 ports:
   ClusterIP:
     - port: 7878
