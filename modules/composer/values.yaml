@@ -3,18 +3,12 @@ exports:
   standard:
     type: deployment
     image:
-      registry: docker.io # TODO: make use of this again
+      registry: null
       name: null
       tag: latest
-      architecture: null # TODO: check affinities for arch also update affinitiy to use this, AND figure out where it is used now
       pullPolicy: IfNotPresent
     labels: {}
     deploymentStrategy: RollingUpdate
-    registryPortOverrides: # TODO: remove this
-      enabled: false # if set to false, keel needs insecureRegistry also set to fale
-      docker.io: 5000
-      ghcr.io: 5001
-      lscr.io: 5002
     probes:
       liveness:
         enabled: false
@@ -36,13 +30,11 @@ exports:
         headers: {}
     replicas: 1
     hostNetwork: false
-    hostIPC: false # TODO: remove this, only used by ollama old gpu.yaml
-    nodeSelector: {} # TODO: remove, depend on affinitity instead
     affinity:
       required: 
         default: true
         labels: {}
-        # kubernetes.io/arch: # TODO: use diff example, change once arch field above is figured out
+        # kubernetes.io/arch:
           # values: [amd64]
       preferred: 
         default: true
@@ -54,7 +46,6 @@ exports:
     secretEnv: {}
     args: []
     command: []
-    nameservers: [] # TODO: is this still needed????
     gpu:
       enabled: false
       user: abc # linuxserver specific by default

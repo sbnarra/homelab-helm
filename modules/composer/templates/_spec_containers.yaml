@@ -1,8 +1,7 @@
 {{- define "spec.containers" }}
 containers:
 - name: {{ .Release.Name }}
-  # image: {{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
-  image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+  image: {{ if .Values.image.registry }}{{ .Values.image.registry }}/{{ end }}{{ .Values.image.name }}:{{ .Values.image.tag }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
   {{- if .Values.command }}
   command:
@@ -129,12 +128,6 @@ initContainers:
 {{- end }}
 {{- end }}
 {{- include "spec.volumes-spec" $ }}
-{{- if .Values.nodeSelector }}
-nodeSelector:
-  {{- range $k, $v := .Values.nodeSelector }}
-  {{ $k }}: {{ tpl $v $ }}
-  {{- end }}
-{{- end }}
 {{- if .Values.security.sysctls }}
 securityContext:
   sysctls:
@@ -145,18 +138,11 @@ securityContext:
 {{- end }}
 hostname: {{ .Release.Name }}
 hostNetwork: {{ .Values.hostNetwork }}
-hostIPC: {{ .Values.hostIPC }}
 dnsPolicy: {{ .Values.dnsPolicy | default "ClusterFirst" }}
 dnsConfig:
   options:
   - name: ndots
     value: {{ .Values.ndots | default 1 | quote }}
-  {{- if .Values.nameservers }}
-  nameservers:
-    {{- range .Values.nameservers }}
-    - {{ . }}
-    {{- end }}
-  {{- end }}
 {{- if .Values.serviceAccountName }}
 serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}

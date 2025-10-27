@@ -65,7 +65,6 @@ traefik:
  #   initContainers:
  #   - name: volume-permissions
  #     image: busybox:latest
- #     # TODO: set this volume up in ansible with 65532:65532 to avoid manually setting
  #     command: ["sh", "-c", "[ ! -e /data/acme.json ] && touch /data/acme.json && chmod -v 600 /data/acme.json"]
  #     volumeMounts:
  #     - mountPath: /data

@@ -32,8 +32,8 @@ probes:
     enabled: true
     port: 8443
     delay: 300 # ansible install takes long time 
-    interval: 10
-    threshold: 24
+    interval: 20
+    threshold: 30 # 10 mins
 volumes:
   config:
   - path: /custom-cont-init.d/01_copy-config
