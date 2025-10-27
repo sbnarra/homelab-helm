@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# wrapper to skip building dependancies
-# ...use most the time apart from when changing modules
-$(dirname $0)/helmfile --skip-deps $@

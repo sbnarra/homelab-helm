@@ -1,7 +1,6 @@
 image:
   registry: lscr.io
   name: linuxserver/prowlarr
-  tag: latest
 probes:
   liveness:
     enabled: true

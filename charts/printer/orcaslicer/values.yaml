@@ -1,7 +1,7 @@
 image:
   registry: lscr.io
   name: linuxserver/orcaslicer
-  tag: latest
+  # architecture: amd64
 probes:
   liveness:
     enabled: true
@@ -16,8 +16,8 @@ ports:
 volumes:
   persisted:
   - /config
-  claims:
-  - claim: "{{ .Values.sharedStorageClaim }}"
+  pvc:
+  - claim: "{{ .Values.workspaceClaim }}"
     mounts:
       freecad: /freecad
       downloads: /downloads

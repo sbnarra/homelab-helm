@@ -33,9 +33,12 @@ volumes:
   - /app/server
   - /app/configs
   - /app/logs
-  claims:
-  - claim: "{{ .Values.mediaStorageClaim }}"
+  pvc:
+  - claim: "{{ .Values.showsClaim }}"
     mounts:
-      /: /storage
+      library: /library/shows
+  - claim: "{{ .Values.moviesClaim }}"
+    mounts:
+      library: /library/movies
 gpu:
   enabled: true

@@ -4,7 +4,6 @@ ttlSecondsAfterFinished: 86400
 serviceAccountName: backup
 image:
   name: library/alpine
-  tag: latest
 command:
 - sh
 - -c

@@ -12,23 +12,23 @@ repositories:
 ---
 releases:
 - inherit:
-  - template: persistenceStorage
+  - template: deployment-storage
 
 - name: backup
   inherit:
-  - template: requiresNothing
+  - template: stateless-deployment
 
 - name: startpage
   inherit:
-  - template: requiresNothing
+  - template: stateless-deployment
 
 - name: keel
   inherit:
-  - template: requiresNothing
+  - template: stateless-deployment
   values: [keel/values.yaml.gotmpl]
 
 # this storage is required as prometheus creates it own pvc
-- name: prometheus-persistence
+- name: prometheus-storage
   inherit:
   - template: storage
   values:
@@ -38,11 +38,12 @@ releases:
 
 - name: prometheus
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   values: [prometheus/values.yaml.gotmpl]
-  needs: [prometheus-persistence]
+  needs: [prometheus-storage]
 
 - name: loki
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   values: [loki/values.yaml.gotmpl]
+  needs: [prometheus]

@@ -18,8 +18,8 @@ volumes:
     size: 2Gi
   persisted:
   - /config
-  claims:
-  - claim: "{{ .Values.sharedStorageClaim }}"
+  pvc:
+  - claim: "{{ .Values.workspaceClaim }}"
     mounts:
       /: /workspace
 gpu:

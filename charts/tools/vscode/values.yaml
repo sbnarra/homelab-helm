@@ -1,7 +1,6 @@
 image:
   registry: lscr.io
   name: linuxserver/code-server
-  tag: latest
 labels:
   backup/skip: 0
   backup/scale.skip: 0
@@ -80,8 +79,8 @@ volumes:
   persisted:
   - /config
   - /modcache
-  claims:
-  - claim: "{{ .Values.sharedStorageClaim }}"
+  pvc:
+  - claim: "{{ .Values.workspaceClaim }}"
     mounts:
       /: /workspace
 security:

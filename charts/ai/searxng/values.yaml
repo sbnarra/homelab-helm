@@ -1,6 +1,5 @@
 image:
   name: searxng/searxng
-  tag: latest
 releaseNotes: https://github.com/searxng/searxng/commits/master
 env:
 #   INSTANCE_NAME: "searxng"

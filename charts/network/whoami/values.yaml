@@ -1,6 +1,5 @@
 image:
   name: traefik/whoami
-  tag: latest
 releaseNotes: https://hub.docker.com/r/traefik/whoami/tags
 probes:
   liveness:

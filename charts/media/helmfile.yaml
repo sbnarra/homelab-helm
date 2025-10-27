@@ -4,14 +4,21 @@ bases:
 ---
 releases:
 - inherit:
-  - template: persistenceStorage
+  - template: deployment-storage
+
 - inherit:
-  - template: mediaStorage
+  - template: shows-storage
+- inherit:
+  - template: movies-storage
 
 - name: jellyfin
   inherit:
-  - template: requiresMedia
+  - template: stateful-deployment
+  - template: use-shows-storage
+  - template: use-movies-storage
 
 - name: qbitvpn
   inherit:
-  - template: requiresMedia
+  - template: stateful-deployment
+  - template: use-shows-storage
+  - template: use-movies-storage

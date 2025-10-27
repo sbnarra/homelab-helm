@@ -4,22 +4,26 @@ bases:
 ---
 releases:
 - inherit:
-  - template: persistenceStorage
-- inherit:
-  - template: sharedStorage
+  - template: deployment-storage
 
 - name: vaultwarden
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
+
+- inherit:
+  - template: workspace-storage
 
 - name: vscode
   inherit:
-  - template: requiresSharedStorage
+  - template: stateful-deployment
+  - template: use-workspace-storage
 
 - name: webtop
   inherit:
-  - template: requiresSharedStorage
+  - template: stateful-deployment
+  - template: use-workspace-storage
 
 - name: brave
   inherit:
-  - template: requiresSharedStorage
+  - template: stateful-deployment
+  - template: use-workspace-storage

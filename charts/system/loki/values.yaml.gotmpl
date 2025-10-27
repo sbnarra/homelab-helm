@@ -12,4 +12,4 @@ loki-stack:
     persistence:
       enabled: true
       subPath: loki/data
-      existingClaim: persistence-{{ .Values.namespace }}
+      existingClaim: {{ .Release.Namespace }}-deployment-storage

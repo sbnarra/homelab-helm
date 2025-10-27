@@ -1,0 +1,102 @@
+{{- define "spec.volumes-spec" }}
+{{- if .Values.volumes }}
+volumes:
+{{- if .Values.gpu.enabled }}
+- name: host-gpu
+  hostPath:
+    path: /dev/dri
+    type: Directory
+{{- end }}
+{{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+- name: {{ $.Release.Name }}-linuxserver-gpu
+  configMap:
+    name: {{ $.Release.Name }}-linuxserver-gpu
+    defaultMode: 0644
+{{- end }}
+{{- if ne .Values.volumes.shm.size "0" }}
+- name: dshm
+  emptyDir:
+    medium: Memory
+    sizeLimit: {{ .Values.volumes.shm.size }}  
+{{- end }}
+{{- if .Values.volumes.persisted }}
+- name: deployment-storage
+  persistentVolumeClaim:
+    claimName: {{ .Release.Namespace }}-deployment-storage
+{{- end }}
+{{- range .Values.volumes.pvc }}
+- name: pvc-{{ tpl .claim $ }}
+  persistentVolumeClaim:
+    claimName: {{ tpl .claim $ }}
+{{- end }}
+{{- range $host := .Values.volumes.host }}
+- name: host-{{ $host | toString | sha1sum }}
+  hostPath:
+    path: {{ $host.hostPath }}
+    type: {{ $host.type }}
+{{- end }}
+{{- range .Values.volumes.secret }}
+- name: {{ include "helpers.configmap-key" (merge (dict "conf" .) $) }}
+  secret:
+    secretName: {{ include "helpers.configmap-key" (merge (dict "conf" .) $) }}
+    defaultMode: {{ .mode | default "0644" }}
+{{- end }}
+{{- range $conf := .Values.volumes.config }}
+- name: {{ include "helpers.configmap-key" (merge (dict "conf" $conf) $) }}
+  configMap:
+    name: {{ include "helpers.configmap-key" (merge (dict "conf" $conf) $) }}
+    defaultMode: {{ $conf.mode | default "0644" }}
+{{- end }}
+
+{{- end }}
+{{- end }}
+
+{{- define "spec.volumes-mount" }}
+{{- if .Values.volumes }}
+volumeMounts:
+{{- if .Values.gpu.enabled }}
+- name: host-gpu
+  mountPath: /dev/dri
+{{- end }}
+{{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+- name: {{ $.Release.Name }}-linuxserver-gpu
+  mountPath: /custom-cont-init.d/00_gpu-render-group
+  subPath: 00_gpu-render-group
+{{- end }}
+{{- if ne .Values.volumes.shm.size "0" }}
+- name: dshm
+  mountPath: /dev/shm
+{{- end }}
+{{- range .Values.volumes.persisted }}
+- name: deployment-storage
+  mountPath: {{ . }}
+  subPath: {{ $.Release.Name }}{{ . }}
+{{- end }}
+{{- range $claim := .Values.volumes.pvc }}
+{{- range $subPath, $container := .mounts }}
+- name: pvc-{{ tpl $claim.claim $ }}
+  mountPath: {{ tpl $container $ }}
+  {{- if ne $subPath "/" }}
+  subPath: {{ tpl $subPath $ }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- range $host := .Values.volumes.host }}
+- name: host-{{ $host | toString | sha1sum }}
+  mountPath: {{ $host.containerPath }}
+{{- end }}
+{{- range .Values.volumes.secret }}
+- name: {{ include "helpers.configmap-key" (merge (dict "conf" .) $) }}
+  mountPath: {{ .path }}
+  subPath: {{ base .path }}
+{{- end }}
+{{- range $conf := .Values.volumes.config }}
+- name: {{ include "helpers.configmap-key" (merge (dict "conf" $conf) $) }}
+  mountPath: {{ $conf.path }}
+  {{- if not $conf.dir }}
+  subPath: {{ base $conf.path }}
+  {{- end }}
+{{- end }}
+
+{{- end }}
+{{- end }}

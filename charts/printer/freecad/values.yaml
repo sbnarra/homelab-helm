@@ -1,7 +1,6 @@
 image:
   registry: lscr.io
   name: linuxserver/freecad
-  tag: latest
 probes:
   liveness:
     enabled: true
@@ -16,8 +15,8 @@ ports:
 volumes:
   persisted:
   - /config
-  claims:
-  - claim: "{{ .Values.sharedStorageClaim }}"
+  pvc:
+  - claim: "{{ .Values.workspaceClaim }}"
     mounts:
       freecad: /freecad
 gpu:

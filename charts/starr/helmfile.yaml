@@ -3,50 +3,66 @@ bases:
 - ../../modules/templates.yaml.gotmpl
 ---
 releases:
-- inherit:
-  - template: persistenceStorage
-- inherit:
-  - template: mediaStorage
-
 - name: flaresolverr
   inherit:
-  - template: requiresNothing
+  - template: stateless-deployment
 
-- name: tdarr
-  inherit:
-  - template: requiresMedia
-
-- name: tdarr-client
-  inherit:
-  - template: requiresMedia
+- inherit:
+  - template: deployment-storage
 
 - name: prowlarr
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   needs:
   - flaresolverr
 
+- inherit:
+  - template: shows-storage
+- inherit:
+  - template: movies-storage
+
 - name: bazarr
   inherit:
-  - template: requiresMedia
+  - template: stateful-deployment
+  - template: use-shows-storage
+  - template: use-movies-storage
   needs:
   - prowlarr
 
 - name: sonarr
   inherit:
-  - template: requiresMedia
+  - template: stateful-deployment
+  - template: use-shows-storage
   needs:
   - prowlarr
 
 - name: radarr
   inherit:
-  - template: requiresMedia
+  - template: stateful-deployment
+  - template: use-movies-storage
   needs:
   - prowlarr
 
 - name: overseerr
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   needs:
   - sonarr
   - radarr
+
+# - name: tdarr-storage
+#   inherit:
+#   - template: storage
+#   values:
+
+# - name: tdarr
+#   inherit:
+#   - template: stateful-deployment
+
+# - name: tdarr-client
+#   inherit:
+#   - template: stateful-deployment
+#   - template: use-movies-storage
+#   - template: use-movies-storage
+#   needs:
+#   - tdarr-cache

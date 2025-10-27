@@ -1,6 +1,5 @@
 image:
   name: library/nginx
-  tag: latest
 ports:
   ClusterIP:
   - port: 80

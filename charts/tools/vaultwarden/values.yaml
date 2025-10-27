@@ -1,6 +1,5 @@
 image:
   name: vaultwarden/server
-  tag: latest
 releaseNotes: https://github.com/dani-garcia/vaultwarden/releases
 env:
   WEBSOCKET_ENABLED: "false"

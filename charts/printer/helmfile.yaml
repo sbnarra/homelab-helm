@@ -4,14 +4,17 @@ bases:
 ---
 releases:
 - inherit:
-  - template: persistenceStorage
+  - template: deployment-storage
+
 - inherit:
-  - template: sharedStorage
+  - template: workspace-storage
 
 - name: freecad
   inherit:
-  - template: requiresSharedStorage
+  - template: stateful-deployment
+  - template: use-workspace-storage
 
 - name: orcaslicer
   inherit:
-  - template: requiresSharedStorage
+  - template: stateful-deployment
+  - template: use-workspace-storage

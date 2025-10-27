@@ -8,37 +8,37 @@ repositories:
 ---
 releases:
 - inherit:
-  - template: persistenceStorage
+  - template: deployment-storage
 
 - name: proxy
   inherit:
-  - template: requiresNothing
+  - template: stateless-deployment
 
 - name: whoami
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
 
 - name: speedtest
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
 
 - name: smokeping
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
 
 # { {- if .Values.isLive }}
 - name: ip-updater
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
 
 - name: traefik-forward-auth
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   needs:
   - traefik
 # { {- end }}
 
 - name: traefik
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   values: [traefik/values.yaml.gotmpl]

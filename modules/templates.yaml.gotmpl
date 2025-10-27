@@ -1,64 +1,56 @@
 ---
 templates:
-
-  requiresNothing:
-    chart: ./{{`{{ .Release.Name }}`}}
+  common:
     namespace: {{ exec "pwd" (list) | trim | base }}
     values:
-    - environment: {{ .Environment.Name }}
+    # - environment: {{ .Environment.Name }}
     - "../../config/{{ .Environment.Name }}/values.yaml"
     secrets:
     - "../../config/{{ .Environment.Name }}/secrets.sops.yaml"
     - "../../config/{{ .Environment.Name }}/keys.sops.yaml"
 
-  requiresPersistence:
-    inherit:
-    - template: requiresNothing
-    needs:
-    - persistence
-
-  requiresMedia:
-    inherit:
-    - template: requiresPersistence
-    values:
-    - mediaStorageClaim: media-{{ exec "pwd" (list) | trim | base }}
-    needs:
-    - media
-
-  requiresSharedStorage:
-    inherit:
-    - template: requiresPersistence
-    values:
-    - sharedStorageClaim: shared-storage-{{ exec "pwd" (list) | trim | base }}
-    needs:
-    - shared-storage
-
-########################################################
-
   storage:
-    inherit:
-    - template: requiresNothing
     chart: ../../modules/storage
-
-  persistenceStorage: # TODO: deploymentStorage
+    inherit:
+    - template: common
+  deployment-storage:
+    name: deployment-storage
     inherit:
     - template: storage
-    name: persistence
 
-  mediaStorage:
+  stateless-deployment:
+    chart: ./{{`{{ .Release.Name }}`}}
+    inherit:
+    - template: common
+  stateful-deployment:
+    inherit:
+    - template: stateless-deployment
+    needs: [deployment-storage]
+
+  workspace-storage:
+    name: workspace-storage
     inherit:
     - template: storage
-    name: media
-    values:
-    - nfs:
-        server: {{`"{{ .Values.machine_ips.rx4 }}"`}}
-        path: /lab/media
-
-  sharedStorage: # TODO: workspaceStorage
-    inherit:
-    - template: storage
-    name: shared-storage
     values:
     - nfs:
         server: {{`"{{ .Values.machine_ips.op5 }}"`}}
         path: /lab/shared
+  use-workspace-storage:
+    values:
+    - workspaceClaim: {{ exec "pwd" (list) | trim | base }}-workspace-storage
+    needs: [workspace-storage]
+
+{{ range $media := list "shows" "movies" }}
+  {{ $media }}-storage:
+    name: {{ $media }}-storage
+    inherit:
+    - template: storage
+    values:
+    - nfs:
+        server: {{`"{{ .Values.machine_ips.rx4 }}"`}}
+        path: /lab/media/{{ $media }}
+  use-{{ $media }}-storage:
+    values:
+    - {{ $media }}Claim: {{ exec "pwd" (list) | trim | base }}-{{ $media }}-storage
+    needs: [{{ $media }}-storage]
+{{- end }}

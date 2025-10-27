@@ -1,7 +1,6 @@
 image:
   registry: ghcr.io
   name: flaresolverr/flaresolverr
-  tag: latest
 probes:
   liveness:
     enabled: true

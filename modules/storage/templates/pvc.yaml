@@ -3,11 +3,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-{{ .Release.Namespace }}
+  name: {{ .Release.Namespace }}-{{ .Release.Name }}
 spec:
   selector:
     matchLabels:
-      type: {{ .Release.Name }}-{{ .Release.Namespace }}
+      type: {{ .Release.Namespace }}-{{ .Release.Name }}
   accessModes:
     - ReadWriteMany
   resources:

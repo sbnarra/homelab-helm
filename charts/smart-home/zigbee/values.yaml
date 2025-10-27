@@ -1,6 +1,5 @@
 image:
   name: koenkk/zigbee2mqtt
-  tag: latest
 deploymentStrategy: Recreate
 ports:
   ClusterIP:

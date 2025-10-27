@@ -15,8 +15,23 @@ main() {
     helmfile_dir=$PWD
   fi
 
-  cd $helmfile_dir && \
-    helmfile ${@:-template}
+  case " $@ " in
+    *" apply "* | *" sync "* | *" diff "*)
+      [[ " $@ " == *" ." ]] && args="${@%.}" \
+        || args="--skip-refresh $@ --include-transitive-needs"
+      ;;
+    *" destroy "*)
+      [[ " $@ " == *" ." ]] && args="${@%.}" \
+        || args="--skip-refresh $@"
+      ;;
+    *)
+      stripped="${@%.}"
+      [[ " $@ " == *" ." ]] && args="${stripped:-template}" \
+        || args="--skip-refresh ${@:-template}"
+      ;;
+  esac
+
+  cd $helmfile_dir && echo helmfile $args && helmfile $args
 }
 
 select_helmfile() {

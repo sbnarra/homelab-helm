@@ -1,7 +1,6 @@
 image:
   registry: lscr.io
   name: linuxserver/jellyfin
-  tag: latest
 ports:
   ClusterIP:
   - port: 8096
@@ -12,9 +11,12 @@ ports:
 volumes:
   persisted:
   - /config
-  claims:
-  - claim: "{{ .Values.mediaStorageClaim }}"
+  pvc:
+  - claim: "{{ .Values.showsClaim }}"
     mounts:
-      library: /media
+      library: /library/shows
+  - claim: "{{ .Values.moviesClaim }}"
+    mounts:
+      library: /library/movies
 gpu: 
   enabled: true

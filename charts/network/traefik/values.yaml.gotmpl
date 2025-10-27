@@ -37,7 +37,7 @@ traefik:
         enabled: true
   persistence:
     enabled: true
-    existingClaim: persistence-network
+    existingClaim: {{ .Release.Namespace }}-deployment-storage
     subPath: traefik/data
     path: /data
     accessMode: ReadWriteMany

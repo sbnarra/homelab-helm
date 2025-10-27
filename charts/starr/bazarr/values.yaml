@@ -1,7 +1,6 @@
 image:
   registry: lscr.io
   name: linuxserver/bazarr
-  tag: latest
 probes:
   liveness:
     enabled: true
@@ -16,7 +15,12 @@ ports:
 volumes:
   persisted:
     - /config
-  claims:
-    - claim: "{{ .Values.mediaStorageClaim }}"
-      mounts:
-        /: /storage
+  pvc:
+  - claim: "{{ .Values.showsClaim }}"
+    mounts:
+      library: /library/shows
+      downloads: /downloads/shows
+  - claim: "{{ .Values.moviesClaim }}"
+    mounts:
+      library: /library/movies
+      downloads: /downloads/movies

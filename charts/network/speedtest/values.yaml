@@ -1,6 +1,5 @@
 image:
   name: linuxserver/speedtest-tracker
-  tag: latest
 env:
   APP_KEY: base64:+wLeujMGYUqcSuAmdfVoXzCeXHAlcnCMScyvN7BGOx8=
   ADMIN_NAME: "{{ .Values.defaultUser }}"

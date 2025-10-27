@@ -3,21 +3,17 @@ bases:
 - ../../modules/templates.yaml.gotmpl
 ---
 releases:
-- inherit:
-  - template: persistenceStorage
-
 - name: searxng
   inherit:
-  - template: requiresNothing
+  - template: stateless-deployment
+
+- inherit:
+  - template: deployment-storage
 
 - name: open-webui
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
 
 - name: ollama
   inherit:
-  - template: requiresPersistence
-  # hooks:
-  # - events: ["prepare"]
-  #   showlogs: true
-  #   command: "./ollama/hooks/on-prepare.sh"
+  - template: stateful-deployment

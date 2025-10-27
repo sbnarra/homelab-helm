@@ -1,17 +1,8 @@
 {
-    "books": {
-        "save_path": "books"
-    },
-    "misc": {
-        "save_path": "misc"
-    },
     "movies": {
         "save_path": "movies"
     },
-    "music": {
-        "save_path": "music"
-    },
-    "tv": {
-        "save_path": "tv"
+    "shows": {
+        "save_path": "shows"
     }
 }

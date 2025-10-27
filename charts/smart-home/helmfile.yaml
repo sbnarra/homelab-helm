@@ -8,21 +8,21 @@ environments:
 ---
 releases:
 - inherit:
-  - template: persistenceStorage
+  - template: deployment-storage
 
 - name: matter
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   values:
   - replicas: 0
 
 - name: mosquitto
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
 
 - name: zigbee
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   needs:
   - mosquitto
   labels:
@@ -30,13 +30,13 @@ releases:
 
 - name: home-assistant
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   needs:
   - mosquitto
   - matter
 
 - name: nodered
   inherit:
-  - template: requiresPersistence
+  - template: stateful-deployment
   needs:
   - home-assistant

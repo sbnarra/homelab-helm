@@ -1,6 +1,5 @@
 image:
   name: nodered/node-red
-  tag: latest
 releaseNotes: https://github.com/node-red/node-red/releases
 probes:
   liveness:

@@ -27,8 +27,8 @@ kube-prometheus-stack:
     persistence:
       enabled: true
       type: pvc
-      subPath: system/grafana/var/lib/grafana
-      existingClaim: persistence-system
+      subPath: grafana/var/lib/grafana
+      existingClaim: system-deployment-storage
 
   prometheus:
     prometheusSpec:
@@ -40,10 +40,10 @@ kube-prometheus-stack:
           metadata:
             name: db
           spec:
-            volumeName: prometheus-persistence-system
+            volumeName: system-prometheus-storage
             selector:
             matchLabels:
-              type: prometheus-persistence-system
+              type: system-prometheus-storage
             accessModes: [ReadWriteMany]
             resources:
               requests:

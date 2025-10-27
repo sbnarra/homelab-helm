@@ -1,6 +1,5 @@
 image:
   name: linuxserver/smokeping
-  tag: latest
 ports:
   ClusterIP:
   - port: 80

@@ -1,7 +1,6 @@
 image:
   registry: lscr.io
   name: linuxserver/homeassistant
-  tag: latest
 hostNetwork: true
 dnsPolicy: ClusterFirstWithHostNet
 deploymentStrategy: Recreate
