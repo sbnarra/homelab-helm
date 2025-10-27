@@ -19,8 +19,6 @@ volumes:
   - claim: "{{ .Values.showsClaim }}"
     mounts:
       library: /library/shows
-      downloads: /downloads/shows
   - claim: "{{ .Values.moviesClaim }}"
     mounts:
       library: /library/movies
-      downloads: /downloads/movies

@@ -1,3 +1,4 @@
+serviceAccountName: startpage
 image:
   name: library/nginx
 ports:
