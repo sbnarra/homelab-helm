@@ -1,15 +1,18 @@
 serviceAccountName: startpage
 image:
-  name: library/nginx
+  name: library/alpine
+command:
+- sh
+- -c
+- apk add --no-cache python3 kubectl && python3 /startpage/main.py
+env:
+  PYTHONUNBUFFERED: 1
 ports:
   ClusterIP:
-  - port: 80
+  - port: 8000
     subdomain: www
 volumes:
   config:
-  - path: /usr/share/nginx/html/index.html
-    content: |
-      {{ tpl (.Files.Get "configmap/index.html") . }}
-  - path: /usr/share/nginx/html/services.json
-    content: |
-      {{ tpl (.Files.Get "configmap/services.json") . }}
+  - path: /startpage
+    mode: "0666"
+    dir: configmap
