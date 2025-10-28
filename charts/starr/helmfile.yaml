@@ -18,16 +18,6 @@ releases:
 
 - inherit:
   - template: shows-storage
-- inherit:
-  - template: movies-storage
-
-- name: bazarr
-  inherit:
-  - template: stateful-deployment
-  - template: use-shows-storage
-  - template: use-movies-storage
-  needs:
-  - prowlarr
 
 - name: sonarr
   inherit:
@@ -36,12 +26,24 @@ releases:
   needs:
   - prowlarr
 
+- inherit:
+  - template: movies-storage
+
 - name: radarr
   inherit:
   - template: stateful-deployment
   - template: use-movies-storage
   needs:
   - prowlarr
+
+- name: bazarr
+  inherit:
+  - template: stateful-deployment
+  - template: use-shows-storage
+  - template: use-movies-storage
+  needs:
+  - sonarr
+  - radarr
 
 - name: overseerr
   inherit:
@@ -50,19 +52,14 @@ releases:
   - sonarr
   - radarr
 
-# - name: tdarr-storage
-#   inherit:
-#   - template: storage
-#   values:
-
-# - name: tdarr
-#   inherit:
-#   - template: stateful-deployment
+- name: tdarr
+  inherit:
+  - template: stateful-deployment
+  - template: use-shows-storage
+  - template: use-movies-storage
 
 # - name: tdarr-client
 #   inherit:
 #   - template: stateful-deployment
+#   - template: use-shows-storage
 #   - template: use-movies-storage
-#   - template: use-movies-storage
-#   needs:
-#   - tdarr-cache

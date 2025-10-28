@@ -35,6 +35,13 @@ volumes:
   - /app/server
   - /app/configs
   - /app/logs
+  host:
+  - hostPath: /lab/cache/tdarr/shows
+    containerPath: /cache/shows
+    type: DirectoryOrCreate
+  - hostPath: /lab/cache/tdarr/movies
+    containerPath: /cache/movies
+    type: DirectoryOrCreate
   pvc:
   - claim: "{{ .Values.showsClaim }}"
     mounts:
