@@ -18,7 +18,9 @@ data:
   {{- end }}
   {{- end }}
 {{- end }}
-{{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+{{- $configureGpu := and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+{{- $fixConfigureGpu := .Values.gpu.fix }}
+{{- if or $configureGpu $fixConfigureGpu }}
 ---
 apiVersion: v1
 kind: ConfigMap

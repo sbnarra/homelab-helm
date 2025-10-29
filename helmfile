@@ -17,21 +17,23 @@ main() {
 
   case " $@ " in
     *" apply "* | *" sync "* | *" diff "*)
-      [[ " $@ " == *" ." ]] && args="${@%.}" \
+      [[ " $@" == *" ." ]] && args="${@%.}" \
         || args="--skip-refresh $@ --include-transitive-needs"
       ;;
     *" destroy "*)
-      [[ " $@ " == *" ." ]] && args="${@%.}" \
+      [[ " $@" == *" ." ]] && args="${@%.}" \
         || args="--skip-refresh $@"
       ;;
     *)
       stripped="${@%.}"
-      [[ " $@ " == *" ." ]] && args="${stripped:-template}" \
+      [[ " $@" == *" ." ]] && args="${stripped:-template}" \
         || args="--skip-refresh ${@:-template}"
       ;;
   esac
 
-  cd $helmfile_dir && echo helmfile $args && helmfile $args
+  cd $helmfile_dir
+  echo helmfile $args
+  [[ "$DEBUG" == "1" ]] || helmfile $args
 }
 
 select_helmfile() {

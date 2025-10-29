@@ -1,9 +1,8 @@
 ---
 templates:
   common:
-    namespace: {{ exec "pwd" (list) | trim | base }}
+    namespace: {{ env "PWD" | base }}
     values:
-    # - environment: {{ .Environment.Name }}
     - "../../config/{{ .Environment.Name }}/values.yaml"
     secrets:
     - "../../config/{{ .Environment.Name }}/secrets.sops.yaml"
@@ -37,7 +36,7 @@ templates:
         path: /lab/shared
   use-workspace-storage:
     values:
-    - workspaceClaim: {{ exec "pwd" (list) | trim | base }}-workspace-storage
+    - workspaceClaim: {{ env "PWD" | base }}-workspace-storage
     needs: [workspace-storage]
 
 {{ range $media := list "shows" "movies" }}
@@ -51,6 +50,6 @@ templates:
         path: /lab/media/{{ $media }}
   use-{{ $media }}-storage:
     values:
-    - {{ $media }}Claim: {{ exec "pwd" (list) | trim | base }}-{{ $media }}-storage
+    - {{ $media }}Claim: {{ env "PWD" | base }}-{{ $media }}-storage
     needs: [{{ $media }}-storage]
 {{- end }}

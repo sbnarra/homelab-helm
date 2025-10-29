@@ -2,34 +2,17 @@ image:
   registry: ghcr.io
   name: haveagitgat/tdarr
   tag: 2.32.01
-keelPollSchedule: "@every 1m"
-security:
-  privileged: true
-probes:
-  liveness:
-    enabled: true
-    port: 8265
-  startup:
-    enabled: true
-    port: 8265
 startpage:
   icon: video
 env:
   serverIP: 0.0.0.0
   serverPort: 8266
-  webUIPort: 8265
-  internalNode: false
   inContainer: true
   ffmpegVersion: 6
+  webUIPort: 8265
+  internalNode: false
 fieldEnv:
   nodeName: spec.nodeName
-ports:
-  ClusterIP:
-  - port: 8265
-    subdomain: tdarr
-  LoadBalancer:
-  - port: 8266
-    name: server
 volumes:
   persisted:
   - /app/server
@@ -51,3 +34,21 @@ volumes:
       library: /library/movies
 gpu:
   enabled: true
+  fix: true
+security:
+  privileged: true
+
+probes:
+  liveness:
+    enabled: true
+    port: 8265
+  startup:
+    enabled: true
+    port: 8265
+ports:
+  ClusterIP:
+  - port: 8265
+    subdomain: tdarr
+  LoadBalancer:
+  - port: 8266
+    name: server

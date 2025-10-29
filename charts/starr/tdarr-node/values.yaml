@@ -3,11 +3,8 @@ image:
   registry: ghcr.io
   name: haveagitgat/tdarr_node
   tag: 2.32.01
-keelPollSchedule: "@every 1m"
-security:
-  privileged: true
 env:
-  serverIP: "{{ .Values.loadBalancerIP }}"
+  serverIP: "{{ .Values.machine_ips.cluster }}"
   serverPort: 8266
   inContainer: true
   ffmpegVersion: 6
@@ -17,6 +14,13 @@ volumes:
   persisted:
   - /app/logs
   - /app/configs
+  host:
+  - hostPath: /lab/cache/tdarr/shows
+    containerPath: /cache/shows
+    type: DirectoryOrCreate
+  - hostPath: /lab/cache/tdarr/movies
+    containerPath: /cache/movies
+    type: DirectoryOrCreate
   pvc:
   - claim: "{{ .Values.showsClaim }}"
     mounts:
@@ -26,6 +30,9 @@ volumes:
       library: /library/movies
 gpu:
   enabled: true
+  fix: true
+security:
+  privileged: true
 affinity:
   preferred:
     default: false

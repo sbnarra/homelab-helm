@@ -58,8 +58,8 @@ releases:
   - template: use-shows-storage
   - template: use-movies-storage
 
-# - name: tdarr-client
-#   inherit:
-#   - template: stateful-deployment
-#   - template: use-shows-storage
-#   - template: use-movies-storage
+- name: tdarr-node
+  inherit:
+  - template: stateful-deployment
+  - template: use-shows-storage
+  - template: use-movies-storage

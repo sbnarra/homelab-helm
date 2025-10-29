@@ -7,7 +7,9 @@ volumes:
     path: /dev/dri
     type: Directory
 {{- end }}
-{{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+{{- $configureGpu := and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+{{- $fixConfigureGpu := .Values.gpu.fix }}
+{{- if or $configureGpu $fixConfigureGpu }}
 - name: {{ $.Release.Name }}-linuxserver-gpu
   configMap:
     name: {{ $.Release.Name }}-linuxserver-gpu
@@ -58,7 +60,9 @@ volumeMounts:
 - name: host-gpu
   mountPath: /dev/dri
 {{- end }}
-{{- if and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+{{- $configureGpu := and .Values.gpu.enabled (contains "linuxserver/" .Values.image.name) }}
+{{- $fixConfigureGpu := .Values.gpu.fix }}
+{{- if or $configureGpu $fixConfigureGpu }}
 - name: {{ $.Release.Name }}-linuxserver-gpu
   mountPath: /custom-cont-init.d/00_gpu-render-group
   subPath: 00_gpu-render-group
