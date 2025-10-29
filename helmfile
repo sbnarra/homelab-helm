@@ -9,12 +9,6 @@ main() {
   export HELMFILE_ENVIRONMENT=${HELMFILE_ENVIRONMENT:-${env:-test}}
   echo "HELMFILE_ENVIRONMENT='${HELMFILE_ENVIRONMENT}'"
 
-  if [ ! -e ./helmfile.yaml ]; then
-    select_helmfile
-  else
-    helmfile_dir=$PWD
-  fi
-
   case " $@ " in
     *" apply "* | *" sync "* | *" diff "*)
       [[ " $@" == *" ." ]] && args="${@%.}" \
@@ -31,8 +25,14 @@ main() {
       ;;
   esac
 
-  cd $helmfile_dir
   echo helmfile $args
+  if [ ! -e ./helmfile.yaml ]; then
+    select_helmfile
+  else
+    helmfile_dir=$PWD
+  fi
+
+  cd $helmfile_dir
   [[ "$DEBUG" == "1" ]] || helmfile $args
 }
 

@@ -3,7 +3,6 @@ environments:
   test:
     kubeContext: pc-virtualisation-control-plane
     values:
-    - namespace: {{ exec "pwd" (list) | trim | base }}
     - "../../config/test/values.yaml"
     secrets:
     - "../../config/test/secrets.sops.yaml"
@@ -11,7 +10,6 @@ environments:
   live:
     kubeContext: r5c-control-plane
     values:
-    - namespace: {{ exec "pwd" (list) | trim | base }}
     - "../../config/live/values.yaml"
     secrets:
     - "../../config/live/secrets.sops.yaml"

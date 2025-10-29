@@ -49,7 +49,7 @@ traefik:
 {{ .Values.entryPoints | toYaml | indent 6 }}
       middlewares:
       - name: traefik-forward-auth
-        namespace: {{ .Values.namespace }}
+        namespace: {{ .Release.Namespace }}
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:

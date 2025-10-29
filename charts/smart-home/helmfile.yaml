@@ -2,10 +2,6 @@ bases:
 - ../../config/environments.yaml.gotmpl
 - ../../modules/templates.yaml.gotmpl
 ---
-environments:
-  test:
-  nas:
----
 releases:
 - inherit:
   - template: deployment-storage
