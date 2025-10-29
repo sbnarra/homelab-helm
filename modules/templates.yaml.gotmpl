@@ -3,6 +3,7 @@
 templates:
   common:
     namespace: {{ $namespace }}
+    # applies helm .Values for charts, for helmfile .gotmpl .Values see environments.yaml.gotmpl
     values:
     - "../../config/{{ .Environment.Name }}/values.yaml"
     secrets:
