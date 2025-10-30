@@ -24,8 +24,9 @@ def scale_down(ctx):
     return replicas
 
 def pv_node_ip(ctx, namespace):
-    cmd = f"kubectl get pv persistence-{namespace} {_jsonpath(".spec.nfs.server")}"
-    return exec.out(ctx, cmd, check=False, silent=True)
+    cmd = f"kubectl get pv {namespace}-deployment-storage {_jsonpath(".spec.nfs.server")}"
+    return exec.out(ctx, cmd, check=False, silent=False)
+    # return exec.out(ctx, cmd, check=False, silent=True)
 
 def get_nodes_by_label(ctx, labels):
     label_selector = ",".join([f"{k}={v}" for k, v in labels.items()])

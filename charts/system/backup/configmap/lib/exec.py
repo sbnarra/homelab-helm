@@ -11,10 +11,12 @@ def run(ctx, cmd, check=True, silent=False):
     res = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=False)
     if not silent and res.returncode != 0:
         ctx.error(f"ran: {cmd}: {res.returncode}")
-        ctx.error(f"stderr: {res.stdout}")
-        ctx.error(f"stderr: {res.stderr}")
+        if res.stdout:
+          ctx.error(f"stdout: {res.stdout.strip()}")
+        if res.stderr:
+          ctx.error(f"stderr: {res.stderr.strip()}")
     if check and res.returncode != 0:
-        raise Exception(f"cmd error {res.returncode}: '{cmd}'\n...stderr...\n{res.stdout}\n...stderr...\n{res.stderr}")
+        raise Exception(f"cmd error {res.returncode}: '{cmd}'\n...stderr...\n{res.stdout.strip()}\n...stderr...\n{res.stderr.strip()}")
     return res
 
 def dry(ctx, cmd):

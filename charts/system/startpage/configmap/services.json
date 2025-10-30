@@ -41,6 +41,20 @@
       "protocol": "http",
       "url": "192.168.1.247",
       "icon": "wifi"
+    },
+    {
+      "namespace": "network",
+      "name": "openwrt",
+      "protocol": "http",
+      "url": "192.168.0.1",
+      "icon": "globe"
+    },
+    {
+      "namespace": "network",
+      "name": "wifi",
+      "protocol": "http",
+      "url": "192.168.0.4",
+      "icon": "wifi"
     }
   ]
 }
