@@ -12,7 +12,7 @@ def init():
     exec.setup_ssh(ctx, all_nodes)
 
     job.queue(ctx, persistence.backup, namespace_nodes, backup_nodes)
-    job.queue(ctx, directory.backup, all_nodes, backup_nodes, "shared")
+    job.queue(ctx, directory.backup, all_nodes, backup_nodes, "workspace")
     job.queue(ctx, directory.backup, all_nodes, backup_nodes, "terraform-backend")
 
 if __name__ == "__main__":

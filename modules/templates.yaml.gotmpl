@@ -35,7 +35,7 @@ templates:
     values:
     - nfs:
         server: {{`"{{ .Values.machine_ips.op5 }}"`}}
-        path: /lab/shared
+        path: /lab/workspace
   use-workspace-storage:
     values:
     - workspaceClaim: {{ $namespace }}-workspace-storage

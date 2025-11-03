@@ -12,8 +12,9 @@ probes:
     port: 3000
 ports:
   ClusterIP:
-  - port: 3000
+  - port: 3001
     subdomain: slicer
+    https: true
 volumes:
   persisted:
   - /config
@@ -23,7 +24,7 @@ volumes:
       freecad: /freecad
       downloads: /downloads
 gpu:
-  enabled: true
+  enabled: false
 affinity:
   preferred:
     default: false
