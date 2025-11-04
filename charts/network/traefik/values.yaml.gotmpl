@@ -6,13 +6,14 @@ traefik:
       secretKeyRef:
         name: cloudflare
         key: token
-  certResolvers:
+  certificatesResolvers:
     letsencrypt:
-      email: arranstobbs@gmail.com
-      storage: /data/acme.json
-      dnsChallenge:
-        resolvers: 1.1.1.1
-        provider: cloudflare
+      acme:
+        email: arranstobbs@gmail.com
+        storage: /data/acme.json
+        dnsChallenge:
+          resolvers: 1.1.1.1
+          provider: cloudflare
   ports:
     websecure:
       tls:

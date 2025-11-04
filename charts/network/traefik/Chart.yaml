@@ -5,5 +5,5 @@ icon: https://helm.sh/img/helm.svg
 
 dependencies:
   - name: traefik
-    version: "^28"
+    version: "^37"
     repository: "@traefik"

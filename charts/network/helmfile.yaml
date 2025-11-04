@@ -10,7 +10,7 @@ releases:
 - inherit:
   - template: deployment-storage
 
-- name: proxy
+- name: neptune
   inherit:
   - template: stateless-deployment
 

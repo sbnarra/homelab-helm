@@ -4,9 +4,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .name }}-proxy
+  name: {{ .name }}
   labels:
-    app.kubernetes.io/name: {{ .name }}-proxy
+    app.kubernetes.io/name: {{ .name }}
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: network-x-forwarded-https@kubernetescrd,network-traefik-forward-auth@kubernetescrd
@@ -20,7 +20,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: {{ .name }}-proxy
+            name: {{ .name }}
             port:
               number: {{ .port }}
 {{- end -}}

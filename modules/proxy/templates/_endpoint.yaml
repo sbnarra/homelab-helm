@@ -1,44 +1,21 @@
-{{- define "components.endpoint" -}}
-{{- range .Values.proxies }}
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: {{ .name }}-proxy
-  labels:
-    kubernetes.io/name: {{ .name }}-proxy
-    kubernetes.io/service-name: {{ .name }}-proxy
-subsets:
-  - addresses:
-    - ip: {{ .ip }}
-    ports:
-    - port: {{ .port }}
-      protocol: TCP
-{{- end -}}
-{{- end -}}
-
-
-
-
 {{- define "components.endpointSlice" -}}
 {{- range .Values.proxies }}
 ---
 apiVersion: discovery.k8s.io/v1
 kind: EndpointSlice
 metadata:
-  name: {{ .name }}-proxy
+  name: {{ .name }}-ip4
   labels:
-    kubernetes.io/name: {{ .name }}-proxy
-    kubernetes.io/service-name: {{ .name }}-proxy
+    kubernetes.io/service-name: {{ .name }}
+    endpointslice.kubernetes.io/managed-by: manual
 addressType: IPv4
-ports:
-  - name: {{ .name }}-proxy
-    protocol: TCP
-    port: {{ .port }}
 endpoints:
-  - addresses:
-      - {{ .ip }}
-    conditions:
-      ready: true
+- addresses:
+  - {{ .ip }}
+  conditions:
+    ready: true
+ports:
+  - protocol: TCP
+    port: {{ .port }}
 {{- end -}}
 {{- end -}}
