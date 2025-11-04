@@ -25,6 +25,13 @@ def get_all_ingresses():
     data = json.loads(output)
     return data.get('items', [])
 
+def get_all_ingressroutes():
+    output = run_kubectl_command(['get', 'ingressroute', '-A', '-o', 'json'])
+    if not output:
+        return []
+    data = json.loads(output)
+    return data.get('items', [])
+
 def extract_service_from_ingress(ingress):
     metadata = ingress.get('metadata', {})
     spec = ingress.get('spec', {})
@@ -37,6 +44,37 @@ def extract_service_from_ingress(ingress):
     # Get the first host from rules
     rules = spec.get('rules', [])
     url = rules[0].get('host', '') if rules else ''
+
+    icon = labels.get('startpage/icon', 'link')
+    protocol = labels.get('startpage/protocol', 'https')
+
+    return {
+        'namespace': namespace,
+        'name': name,
+        'url': url,
+        'icon': icon,
+        'protocol': protocol
+    }
+
+def extract_service_from_ingressroute(ingressroute):
+    metadata = ingressroute.get('metadata', {})
+    spec = ingressroute.get('spec', {})
+    labels = metadata.get('labels', {})
+
+    namespace = metadata.get('namespace', '...')
+    name = metadata.get('name', 'Unknown')
+
+    # Extract host from routes
+    routes = spec.get('routes', [])
+    url = ''
+    if routes:
+        match = routes[0].get('match', '')
+        # Parse Host(`hostname`) pattern
+        if 'Host(`' in match:
+            start = match.find('Host(`') + 6
+            end = match.find('`)', start)
+            if end > start:
+                url = match[start:end]
 
     icon = labels.get('startpage/icon', 'link')
     protocol = labels.get('startpage/protocol', 'https')
@@ -66,14 +104,19 @@ def load_local_services():
         return []
 
 def get_services_from_kubectl():
+    kubectl_services = []
+    
+    # Get services from Ingress resources
     ingresses = get_all_ingresses()
-    if not ingresses:
-        kubectl_services = []
-    else:
-        kubectl_services = []
-        for ingress in ingresses:
-            service = extract_service_from_ingress(ingress)
-            kubectl_services.append(service)
+    for ingress in ingresses:
+        service = extract_service_from_ingress(ingress)
+        kubectl_services.append(service)
+    
+    # Get services from IngressRoute resources
+    ingressroutes = get_all_ingressroutes()
+    for ingressroute in ingressroutes:
+        service = extract_service_from_ingressroute(ingressroute)
+        kubectl_services.append(service)
     
     # Load local services
     local_services = load_local_services()
