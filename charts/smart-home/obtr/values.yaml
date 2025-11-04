@@ -1,0 +1,30 @@
+image:
+  registry: ghcr.io
+  name: ownbee/hass-otbr-docker
+hostNetwork: true
+dnsPolicy: ClusterFirstWithHostNet
+security:
+  privileged: true
+env:
+  DEVICE: /dev/serial/by-id/usb-Nabu_Casa_Home_Assistant_Connect_ZBT-1_fc6dc2076a39ef1184bd51f454516304-if00-port0
+  FLOW_CONTROL: 1
+  FIREWALL: 1
+  NAT64: 1
+  BAUDRATE: 460800
+  OTBR_REST_PORT: 8081
+  OTBR_WEB_PORT: 7586
+  AUTOFLASH_FIRMWARE: 0
+  BACKBONE_IF: eth0
+ports:
+  ClusterIP:
+  - port: 8081
+    name: rest
+  - port: 7586
+    subdomain: obtr
+volumes:
+  persisted:
+  - /var/lib/thread
+  host:
+  - hostPath: /dev/serial/by-id/usb-Nabu_Casa_Home_Assistant_Connect_ZBT-1_fc6dc2076a39ef1184bd51f454516304-if00-port0
+    containerPath: /dev/ttyUSB0
+    type: CharDevice

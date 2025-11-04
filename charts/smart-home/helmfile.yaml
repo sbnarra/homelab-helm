@@ -6,11 +6,14 @@ releases:
 - inherit:
   - template: deployment-storage
 
+- name: obtr
+  inherit:
+  - template: stateful-deployment
+
 - name: matter
   inherit:
   - template: stateful-deployment
-  values:
-  - replicas: 0
+  needs: [obtr]
 
 - name: mosquitto
   inherit:
@@ -19,20 +22,16 @@ releases:
 - name: zigbee
   inherit:
   - template: stateful-deployment
-  needs:
-  - mosquitto
+  needs: [mosquitto]
   labels:
     dependsOn: usbs
 
 - name: home-assistant
   inherit:
   - template: stateful-deployment
-  needs:
-  - mosquitto
-  - matter
+  needs: [mosquitto, matter, obtr]
 
 - name: nodered
   inherit:
   - template: stateful-deployment
-  needs:
-  - home-assistant
+  needs: [home-assistant]
