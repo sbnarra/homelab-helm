@@ -22,4 +22,4 @@ volumes:
     mounts:
       freecad: /freecad
 gpu:
-  enabled: false
+  enabled: true

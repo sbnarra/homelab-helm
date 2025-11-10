@@ -24,7 +24,10 @@ volumes:
       freecad: /freecad
       downloads: /downloads
 gpu:
-  enabled: false
+  enabled: true
+security:
+  privileged: true
+  seccomp: Unconfined
 affinity:
   preferred:
     default: false
