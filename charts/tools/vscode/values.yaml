@@ -16,6 +16,9 @@ ports:
   ClusterIP:
     - port: 8443
       subdomain: vs
+    - port: 3001
+      name: auth
+      subdomain: vstest
 probes:
   liveness:
     enabled: true

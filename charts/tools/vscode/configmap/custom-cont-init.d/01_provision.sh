@@ -29,8 +29,10 @@ install_deps_retry() {
 
 install_go() {
   set -e
-  wget -q -O /go1.23.5.linux-amd64.tar.gz https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
-  tar -C /usr/local -xzf /go1.23.5.linux-amd64.tar.gz
+  wget -q -O /go1.23.5.linux-arm64.tar.gz https://go.dev/dl/go1.23.5.linux-arm64.tar.gz
+  tar -C /usr/local -xzf /go1.23.5.linux-arm64.tar.gz
+  # go install -v golang.org/x/lint/golint@latest
+  /usr/local/go/bin/go install honnef.co/go/tools/cmd/staticcheck@latest
   chown -R abc:abc /usr/local/go
   set +e
 }
@@ -59,11 +61,15 @@ brew_install() {
   chown -R abc:abc /home/linuxbrew/.linuxbrew
 }
 
-install_ansible() {
-  brew install ansible
+brew_background_install() {
+  brew install ansible openapi-generator
   mkdir -p /etc/ansible
   echo "[ssh_connection]\ncontrol_path_dir=/dev/shm/ansible_control_path" >> /etc/ansible/ansible.cfg
   helm plugin install https://github.com/databus23/helm-diff
+}
+
+install_rust() {
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 }
 
 main() {
@@ -72,10 +78,11 @@ main() {
   install_deps_retry 3
   configure_git &
   install_go &
+  install_rust &
   brew_install &
   wait
   
-  install_ansible &
+  brew_background_install &
 }
 
 main

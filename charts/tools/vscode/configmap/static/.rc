@@ -7,3 +7,7 @@ export PS1="$(hostname) $PS1"
 export PATH=/usr/local/go/bin:$PATH
 
 export GPG_TTY=$(tty)
+
+. "$HOME/.cargo/env"
+
+export HELMFILE_ENVIRONMENT=live

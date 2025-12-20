@@ -22,6 +22,7 @@ traefik:
         - main: {{ .Values.domain }}
           sans:
           - "*.{{ .Values.domain }}"
+          - "*.dev.{{ .Values.domain }}"
   podSecurityContext:
     fsGroup: 65532
     fsGroupChangePolicy: "OnRootMismatch"
