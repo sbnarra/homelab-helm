@@ -1,5 +1,6 @@
 type: cronjob
 schedule: "* * * * *"
+activeDeadlineSeconds: 55
 image:
   name: library/alpine
   tag: edge

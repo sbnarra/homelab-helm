@@ -19,12 +19,18 @@ spec:
     metadata: {}
     spec:
       ttlSecondsAfterFinished: {{ .Values.ttlSecondsAfterFinished | default 60 }}
+      {{- if .Values.activeDeadlineSeconds }}
+      activeDeadlineSeconds: {{ .Values.activeDeadlineSeconds }}
+      {{- end }}
       template:
         metadata:
           labels:
             app: {{ .Release.Name }}
         spec:
           restartPolicy: {{ .Values.restartPolicy | default "Never" }}
+          {{- if .Values.activeDeadlineSeconds }}
+          activeDeadlineSeconds: {{ .Values.activeDeadlineSeconds }}
+          {{- end }}
           {{- include "spec.affinity" . | indent 10 }}
           {{- include "spec.containers" . | indent 10 }}
 {{- end }}
