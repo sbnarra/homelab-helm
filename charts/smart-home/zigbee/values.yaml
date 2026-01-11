@@ -7,6 +7,9 @@ ports:
   ClusterIP:
   - port: 8080
     subdomain: zigbee
+probes:
+  liveness:
+    enabled: true
 volumes:
   persisted:
   - /app/data

@@ -69,7 +69,9 @@ brew_background_install() {
 }
 
 install_rust() {
-   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  cargo install espup --locked
+  espup install
 }
 
 main() {
@@ -78,11 +80,11 @@ main() {
   install_deps_retry 3
   configure_git &
   install_go &
-  install_rust &
   brew_install &
   wait
   
   brew_background_install &
+  install_rust &
 }
 
 main

@@ -9,5 +9,7 @@ export PATH=/usr/local/go/bin:$PATH
 export GPG_TTY=$(tty)
 
 . "$HOME/.cargo/env"
+. $HOME/export-esp.sh
 
 export HELMFILE_ENVIRONMENT=live
+

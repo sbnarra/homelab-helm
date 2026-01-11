@@ -55,6 +55,13 @@
       "protocol": "http",
       "url": "192.168.0.4",
       "icon": "wifi"
+    },
+    {
+      "namespace": "network",
+      "name": "sonoff co-ordinator",
+      "protocol": "http",
+      "url": "192.168.1.230",
+      "icon": "wifi"
     }
   ]
 }
