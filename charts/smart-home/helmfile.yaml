@@ -19,12 +19,10 @@ releases:
   inherit:
   - template: stateful-deployment
 
-- name: zigbee
+- name: sonoff-zigbee
   inherit:
   - template: stateful-deployment
   needs: [mosquitto]
-  labels:
-    dependsOn: usbs
 
 - name: home-assistant
   inherit:

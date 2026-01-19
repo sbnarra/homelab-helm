@@ -1,0 +1,22 @@
+image:
+  name: koenkk/zigbee2mqtt
+deploymentStrategy: Recreate
+startpage:
+  icon: radio
+env:
+  Z2M_WATCHDOG: minutes_csv
+  Z2M_WATCHDOG: 0.1,0.2,0.2,0.5,1,1,1,2,3
+ports:
+  ClusterIP:
+  - port: 8080
+    subdomain: zigbee
+probes:
+  liveness:
+    enabled: true
+volumes:
+  persisted:
+  - /app/data
+  host:
+  - hostPath: /run/udev
+    containerPath: /run/udev
+    type: Directory
