@@ -1,6 +1,7 @@
 install_deps() {
   apt-get install -fy --fix-missing \
-    git vim sshpass zsh build-essential wget pkg-config libssl-dev
+    git vim sshpass zsh build-essential wget
+    #  pkg-config libssl-dev
 }
 
 setup_config() {
